@@ -1,4 +1,3 @@
-// hello
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
@@ -8,6 +7,13 @@ struct users
   char username[100];
   char password[100];
 };
+
+int in_prog()
+{
+  printf("\e[1;1H\e[2J");
+  printf("In progress...\n Press any key to return");
+  getch();
+}
 
 int account_info(char username[])
 {
@@ -61,55 +67,34 @@ int account_info(char username[])
     case '\r':
       if (act == 1)
       {
-        printf("\e[1;1H\e[2J");
-        printf("In progress...\n Press any key to return");
-        getch();
-        act = 1;
-        printf("\e[1;1H\e[2J");
-        printf("Welcome, %s\n", username);
-        printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-        printf("=>1.See account information\n  2.Transfer money\n  3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
+        in_prog();
       }
       else if (act == 2)
       {
-        printf("\e[1;1H\e[2J");
-        printf("In progress...\n Press any key to return");
-        getch();
-        printf("\e[1;1H\e[2J");
-        printf("Welcome, %s\n", username);
-        printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-        printf("  1.See account information\n=>2.Transfer money\n  3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
+        in_prog();
       }
       else if (act == 3)
       {
-        printf("\e[1;1H\e[2J");
-        printf("In progress...\n Press any key to return");
-        getch();
-        printf("\e[1;1H\e[2J");
-        printf("Welcome, %s\n", username);
-        printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-        printf("  1.See account information\n  2.Transfer money\n=>3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
+        in_prog();
       }
       else if (act == 4)
       {
-        printf("\e[1;1H\e[2J");
-        printf("In progress...\n Press any key to return");
-        getch();
-        printf("\e[1;1H\e[2J");
-        printf("Welcome, %s\n", username);
-        printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-        printf("  1.See account information\n  2.Transfer money\n  3.Change password\n=>4.Change email\n  5.Back to Login/Sign Up");
+        in_prog();
       }
       else
       {
         enter = 1;
       }
-      break;
+
     default:
+      printf("\e[1;1H\e[2J");
+      printf("Welcome, %s!\n", username);
+      printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
+      printf("  1.See account information\n  2.Transfer money\n  3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
     }
   }
-  // getch();
+  return 0;
 }
 
 int login()
@@ -117,12 +102,8 @@ int login()
   printf("\e[1;1H\e[2J");
   struct users userLogin;
 
-  // fgets(userLogin.username, sizeof(userLogin.username), stdin);
-
   printf("Enter your username: ");
   scanf("%s", userLogin.username);
-
-  // getch();
 
   int i = 0;
   char ch;
@@ -180,14 +161,14 @@ int signup()
   }
   userSignIn.password[i] = '\0';
 
-  FILE *new = fopen("user1.txt", "a"); // open  modes: "rb", "ab", "wb"
+  FILE *new = fopen("users1.txt", "a"); // open  modes: "rb", "ab", "wb"
   fprintf(new, "%s %s\n", userSignIn.username, userSignIn.password);
 
   printf("\nYour user name is: %s \n", userSignIn.username);
   printf("Your password is: %s \n", userSignIn.password);
 
   fclose(new);
-  printf("Your account has been created succesfully.");
+  printf("\nYour account has been created succesfully.");
   getch();
   account_info(userSignIn.username);
   return 0;
@@ -195,7 +176,7 @@ int signup()
 
 int user_menu()
 {
-  int enter, menu = 0;
+  int enter = 0, menu = 0;
   char ch;
 
   printf("\e[1;1H\e[2J");
@@ -229,28 +210,31 @@ int user_menu()
       if (menu == 1)
       {
         login();
-        menu = 1;
-        printf("\e[1;1H\e[2J");
-        printf("Press number keys to select between options and then press Enter\n");
-        printf("\n>1.Login\n 2.Create an account\n 3.Exit to main screen");
       }
       else if (menu == 2)
       {
         signup();
-        menu = 2;
-        printf("\e[1;1H\e[2J");
-        printf("Press number keys to select between options and then press Enter\n");
-        printf("\n 1.Login\n>2.Create an account\n 3.Exit to main screen");
       }
       else
       {
         enter = 1;
       }
-      break;
     default:
+      printf("\e[1;1H\e[2J");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf("\n 1.Login\n 2.Create an account\n 3.Exit to main screen");
       break;
     }
   }
+  return 0;
+}
+
+int employee_menu()
+{
+  printf("\e[1;1H\e[2J");
+  printf("In Progress...Please come back later\nPress any key to return");
+  getch();
+  return 0;
 }
 
 int main()
@@ -292,23 +276,13 @@ int main()
     case '\r':
       if (choice == 1)
       {
+        employee_menu();
         choice = 1;
-        printf("\e[1;1H\e[2J");
-        printf("In Progress...Please come back later\nPress any key to return");
-        getch();
-        printf("\e[1;1H\e[2J");
-        printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
-        printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-        printf("=>1.Employee Platform \n  2.Customer Platform\n  3.Exit Application");
       }
       else if (choice == 2)
       {
         user_menu();
         choice = 2;
-        printf("\e[1;1H\e[2J");
-        printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
-        printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-        printf("  1.Employee Platform \n=>2.Customer Platform\n  3.Exit Application");
       }
       else
       {
@@ -316,6 +290,10 @@ int main()
       }
 
     default:
+      printf("\e[1;1H\e[2J");
+      printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
+      printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
+      printf("  1.Employee Platform \n  2.Customer Platform\n  3.Exit Application");
       break;
     }
   }
