@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <conio.h>
+#include <string.h>
+#include <stdlib.h>
+
+struct users
+{
+  char username[64];
+  char password [64];
+};
+
+
+int main() {
+  int choice;
+  while(choice != 3){
+    printf("\e[1;1H\e[2J");
+    printf("-*-*-*-*- Laxmi Chit Fund -*-*-*-*-\n");
+    printf("What do you wanna do? \n");
+    printf("1.Login\n2.Create an account\n3.Exit");
+
+    printf("\nEnter your choice: ");
+    
+    scanf("%d", &choice);
+    getchar(); // echo
+    //getch(); // no echo
+
+    switch (choice)
+    {
+      case 1:
+        struct users userLogin;
+
+        // fgets(userLogin.username, sizeof(userLogin.username), stdin);
+
+        printf("Enter your username: ");
+        scanf("%s", &userLogin.username);
+
+        // getch();
+
+        int i = 0;
+        char ch;
+        printf("Enter your password: ");
+        while((ch = getch()) != '\r') { 
+          printf("*");  // enter is '\r' 
+          userLogin.password[i++] = ch;
+          // i = i++;
+        }
+        userLogin.password[i] = '\0';  // string terminate with \0 so we remove it by ts
+        
+
+        printf("\nYour user name is: %s", userLogin.username);
+        printf("\nYour password is: %s", userLogin.password);
+        getch();
+        break;
+      
+      case 2:
+        struct users userSignIn;
+        printf("Enter your username: ");
+        scanf("%s", userSignIn.username);
+        // getch();
+
+        i = 0;
+        printf("Enter your password: ");
+        while((ch = getch()) != '\r') {
+          printf("*");
+          userSignIn.password[i++] = ch;
+        }
+        userSignIn.password[i] = '\0';
+
+        
+        FILE *new = fopen("user1.txt", "a"); //open  modes:  a=append , w=write(overwriting ) , r=read
+        fprintf(new, "%s %s\n", userSignIn.username, userSignIn.password);
+
+        printf("\nYour user name is: %s \n", userSignIn.username);
+        printf("Your password is: %s \n", userSignIn.password);
+        
+        fclose(new);
+        printf("Your account has been created succesfully.");
+        getch();
+        break;
+
+      case 3:
+        break;
+      
+      default:
+        break;
+    }
+  }
+}
