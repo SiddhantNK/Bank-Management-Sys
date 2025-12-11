@@ -1,9 +1,11 @@
-// hello
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h> 
 #include <string.h>
 #include <time.h>
+#define FILENAME "user1.txt"
+#define MAX_SIZE 50
+
 
 struct users
 {
@@ -115,44 +117,93 @@ int account_info(char username[])
   }
   // getch();
 }
+int authenticate_user(const char *input_username, const char *input_password) {
+    FILE *file = fopen(FILENAME, "r");
+
+    char file_username[MAX_SIZE];
+    char file_password[MAX_SIZE];
+    int authenticated = 0;
+
+    while (fscanf(file, "%s %s", file_username, file_password) == 2) {
+        
+        if (strcmp(input_username, file_username) == 0 &&
+            strcmp(input_password, file_password) == 0) {
+            
+            authenticated = 1; 
+            break;
+        }
+    }
+
+    fclose(file); 
+    return authenticated;
+}
 
 int login()
 {
-  printf("\e[1;1H\e[2J");
-  struct users userLogin;
 
-  // fgets(userLogin.username, sizeof(userLogin.username), stdin);
+    printf("\e[1;1H\e[2J"); 
+    
+    struct users userLogin;
+    int attempt_count = 0; 
+    int authenticated = 0;
 
-  printf("Enter your username: ");
-  scanf("%s", userLogin.username);
 
-  // getch();
+    while (1) { 
+        attempt_count++;
+        
+        printf("--- User Login System ---\n");
+        printf("Please log in to continue.\n", attempt_count);
+        
+      
+        printf("Enter your username: ");
+        if (scanf("%s", userLogin.username) != 1) {
+        
+            printf("\nInput error. Starting next attempt.\n");
+            continue; 
+        }
 
-  int i = 0;
-  char ch;
-  printf("Enter your password: ");
-  while ((ch = getch()) != '\r')
-  {
-    if (ch == 8)
-    {
-      if (i > 0)
-      {
-        printf("\b \b");
-        userLogin.password[i--] = '\0';
-      }
+       
+        int i = 0;
+        char ch;
+        printf("Enter your password: ");
+        
+        while ((ch = getch()) != '\r' && i < MAX_SIZE - 1) // \r is Enter key
+        {
+            if (ch == 8) 
+            {
+                if (i > 0)
+                {
+                    printf("\b \b"); 
+                    userLogin.password[--i] = '\0';
+                }
+            }
+            else
+            {
+                printf("*"); 
+                userLogin.password[i++] = ch;
+            }
+        }
+        userLogin.password[i] = '\0'; 
+        printf("\n"); 
+
+       
+        authenticated = authenticate_user(userLogin.username, userLogin.password);
+
+        if (authenticated) {
+            printf("\n LOGIN SUCCESSFUL! Welcome back %s.\n", userLogin.username);
+           
+            account_info(userLogin.username); 
+            break;
+        } else {
+            printf("\e[1;1H\e[2J"); 
+            printf("\n Invalid username or password. Please try again.\n");
+            
+            
+            
+        }
     }
-    else
-    {
-      printf("*"); // enter is '\r'
-      userLogin.password[i++] = ch;
-    }
-  }
-  userLogin.password[i] = '\0'; // string terminate with \0 so we remove it by ts
-
-  printf("\nYour user name is: %s", userLogin.username);
-  printf("\nYour password is: %s", userLogin.password);
-  account_info(userLogin.username);
-  return 0;
+    
+    return 0; 
 }
 
 int signup()
@@ -196,7 +247,7 @@ int signup()
   fprintf(new, "%s %s %s\n",  userSignIn.username, userSignIn.password , time_buffer);
 
   printf("\nYour user name is: %s \n", userSignIn.username); 
-  printf("Your password is: %s \n", userSignIn.password);
+  printf("Your password is: %s .\nRemember your credentials for future Login.\n", userSignIn.password);
 
   fclose(new);
   printf("Your account has been created succesfully.");
