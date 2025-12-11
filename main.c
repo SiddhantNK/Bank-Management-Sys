@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <conio.h>
-#include <stdlib.h>
+#include <stdlib.h> 
+#include <string.h>
+#include <time.h>
 
 struct users
 {
   char username[100];
   char password[100];
 };
+ char time_buffer[80];
+
 
 int in_prog()
 {
@@ -160,11 +164,13 @@ int signup()
     }
   }
   userSignIn.password[i] = '\0';
+ 
 
   FILE *new = fopen("users1.txt", "a"); // open  modes: "rb", "ab", "wb"
   fprintf(new, "%s %s\n", userSignIn.username, userSignIn.password);
+  
 
-  printf("\nYour user name is: %s \n", userSignIn.username);
+  printf("\nYour user name is: %s \n", userSignIn.username); 
   printf("Your password is: %s \n", userSignIn.password);
 
   fclose(new);
