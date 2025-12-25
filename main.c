@@ -236,7 +236,7 @@ int signup()
   userSignIn.password[i] = '\0';
 
   FILE *fp4 = fopen("users.txt", "a"); // open  modes: "rb", "ab", "wb"
-  fprintf(fp4, "%s %s %s", userSignIn.username, userSignIn.password, userSignIn.email);
+  fprintf(fp4, "%s %s %s\n", userSignIn.username, userSignIn.password, userSignIn.email);
 
   printf("\nYour account has been created succesfully.");
   fclose(fp4);
