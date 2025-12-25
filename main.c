@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <conio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -8,9 +8,9 @@ struct users
 {
   char username[100];
   char password[100];
+  char time_buffer[80];
+  char email[100];
 };
- char time_buffer[80];
-
 
 int in_prog()
 {
@@ -103,46 +103,116 @@ int account_info(char username[])
 
 int login()
 {
-  printf("\e[1;1H\e[2J");
-  struct users userLogin;
-
-  printf("Enter your username: ");
-  scanf("%s", userLogin.username);
-
-  int i = 0;
-  char ch;
-  printf("Enter your password: ");
-  while ((ch = getch()) != '\r')
+  int ver = 0;
+  while (ver != 1)
   {
-    if (ch == 8)
+    printf("\e[1;1H\e[2J");
+    struct users userLogin;
+
+    printf("Enter your username: ");
+    scanf("%s", userLogin.username);
+
+    int i = 0;
+    char ch;
+    printf("Enter your password: ");
+    while ((ch = getch()) != '\r')
     {
-      if (i > 0)
+      if (ch == 8)
       {
-        printf("\b \b");
-        userLogin.password[i--] = '\0';
+        if (i > 0)
+        {
+          printf("\b \b");
+          userLogin.password[i--] = '\0';
+        }
+      }
+      else
+      {
+        printf("*"); // enter is '\r'
+        userLogin.password[i++] = ch;
       }
     }
-    else
-    {
-      printf("*"); // enter is '\r'
-      userLogin.password[i++] = ch;
-    }
-  }
-  userLogin.password[i] = '\0'; // string terminate with \0 so we remove it by ts
+    userLogin.password[i] = '\0'; // string terminate with \0 so we remove it by ts
 
-  printf("\nYour user name is: %s", userLogin.username);
-  printf("\nYour password is: %s", userLogin.password);
-  account_info(userLogin.username);
-  return 0;
+    FILE *fp = fopen("users.txt", "r");
+
+    char ent_user[64], ent_pass[64], ent_email[64];
+    while (fscanf(fp, "%s %s %s", ent_user, ent_pass, ent_email) != EOF)
+    {
+      if (strcmp(userLogin.username, ent_user) == 0 && strcmp(userLogin.password, ent_pass) == 0)
+      {
+        printf("\nLogin Succesfull! ");
+        getch();
+        account_info(userLogin.username);
+        ver = 1;
+      }
+      else
+      {
+        printf("Try again");
+        getch();
+      }
+    }
+    return 0;
+  }
 }
 
 int signup()
 {
   struct users userSignIn;
+
   printf("\e[1;1H\e[2J");
   printf("Enter your username: ");
   scanf("%s", userSignIn.username);
-  // getch();
+
+  printf("Enter your email address to get the OTP: ");
+  scanf("%s", userSignIn.email);
+
+  FILE *fp1 = fopen("temp.txt", "w");
+  fprintf(fp1, "%s", userSignIn.email);
+  fclose(fp1);
+
+  FILE *fp2 = popen("python send_otp.py", "r");
+  int auth;
+  fscanf(fp2, "%d", &auth);
+  fclose(fp2);
+  if (auth == 0)
+  {
+    int authorized = 0, attempts = 4;
+    while (!authorized || attempts == 0)
+    {
+      int otp;
+      FILE *fp3 = fopen("temp.txt", "r");
+      fscanf(fp3, "%d", &otp);
+      fclose(fp3);
+      int u_otp;
+      printf("Enter OTP: ");
+      scanf("%d", &u_otp);
+      if (otp == u_otp)
+      {
+        printf("Verification successfull!\n");
+        getch();
+        authorized = 1;
+        // return 0;
+      }
+      else if (attempts == 1) {
+        printf("You have ran out of attempts. Try again later");
+        attempts--;
+        return 0;
+      }
+      else
+      {
+        printf("Wrong OTP, please try again.\n");
+        getch();
+        attempts--;
+      }
+    }
+  }
+  else
+  {
+    printf("There is an error sending the email, please try again later");
+    return 0;
+  }
+
+  remove("temp.txt");
 
   int i = 0;
   char en;
@@ -164,20 +234,15 @@ int signup()
     }
   }
   userSignIn.password[i] = '\0';
- 
 
-  FILE *new = fopen("users1.txt", "a"); // open  modes: "rb", "ab", "wb"
-  fprintf(new, "%s %s\n", userSignIn.username, userSignIn.password);
-  
+  FILE *fp4 = fopen("users.txt", "a"); // open  modes: "rb", "ab", "wb"
+  fprintf(fp4, "%s %s %s", userSignIn.username, userSignIn.password, userSignIn.email);
 
-  printf("\nYour user name is: %s \n", userSignIn.username); 
-  printf("Your password is: %s \n", userSignIn.password);
-
-  fclose(new);
   printf("\nYour account has been created succesfully.");
+  fclose(fp4);
+
   getch();
   account_info(userSignIn.username);
-  return 0;
 }
 
 int user_menu()
@@ -237,9 +302,7 @@ int user_menu()
 
 int employee_menu()
 {
-  printf("\e[1;1H\e[2J");
-  printf("In Progress...Please come back later\nPress any key to return");
-  getch();
+  in_prog();
   return 0;
 }
 
