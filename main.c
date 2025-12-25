@@ -147,7 +147,7 @@ int login()
       }
       else
       {
-        printf("Try again");
+        printf("\nWrong credentials please try again");
         getch();
       }
     }
@@ -176,43 +176,48 @@ int signup()
   fclose(fp2);
   if (auth == 0)
   {
-    int authorized = 0, attempts = 4;
+    int authorized = 0, attempts = 2;
     while (!authorized || attempts == 0)
     {
       int otp;
       FILE *fp3 = fopen("temp.txt", "r");
       fscanf(fp3, "%d", &otp);
       fclose(fp3);
+      remove("temp.txt");
       int u_otp;
       printf("Enter OTP: ");
       scanf("%d", &u_otp);
       if (otp == u_otp)
       {
+        printf("\e[1;1H\e[2J");
         printf("Verification successfull!\n");
         getch();
         authorized = 1;
         // return 0;
       }
-      else if (attempts == 1) {
+      else if (attempts == 0) {
+        printf("\e[1;1H\e[2J");
         printf("You have ran out of attempts. Try again later");
-        attempts--;
+        getch();
+        --attempts;
         return 0;
       }
       else
       {
+        printf("\e[1;1H\e[2J");
         printf("Wrong OTP, please try again.\n");
-        getch();
-        attempts--;
+        // getch();
+        // printf("\e[1;1H\e[2J");
+        --attempts;
       }
     }
   }
   else
   {
-    printf("There is an error sending the email, please try again later");
+    printf("\e[1;1H\e[2J");
+    printf("There is an error sending the mail, please try again later");
     return 0;
   }
-
-  remove("temp.txt");
 
   int i = 0;
   char en;
