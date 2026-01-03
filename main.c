@@ -3,14 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <windows.h>
 
 struct users
 {
+  int custId;
   char username[100];
   char password[100];
   char time_buffer[80];
   char email[100];
+  float balance;
 };
+
+struct users current_user_details;
 
 struct employee
 {
@@ -28,14 +33,245 @@ int in_prog()
   getch();
 }
 
-int account_info(char username[])
+int transfer_money(char username[], char password[], char email[], int id, float balance)
+{
+  int i = 0;
+  char ch, pass[64];
+  printf("\e[1;1H\e[2J");
+  printf("Enter your password: ");
+  while ((ch = getch()) != '\r')
+  {
+    if (ch == 8)
+    {
+      if (i > 0)
+      {
+        printf("\b \b");
+        pass[i--] = '\0';
+      }
+    }
+    else
+    {
+      printf("*"); // enter is '\r'
+      pass[i++] = ch;
+    }
+  }
+  pass[i] = '\0';
+
+  if (strcmp(pass, password) == 0) {
+    char ch;
+    int choice, enter;
+    printf("\e[1;1H\e[2J");
+    printf("Choose how do you want to send money");
+    printf("\n  1.By username \n  2.By user ID\n  3.Cancel transaction");
+    while (enter != 1)
+    {
+      ch = getch();
+      switch (ch)
+      {
+      case '1':
+        choice = 1;
+        printf("\e[1;1H\e[2J");
+        printf("Choose how do you want to send money");
+        printf("\n=>1.By username \n  2.By user ID\n  3.Cancel transaction");
+        break;
+      case '2':
+        choice = 2;
+        printf("\e[1;1H\e[2J");
+        printf("Choose how do you want to send money");
+        printf("\n  1.By username \n=>2.By user ID\n  3.Cancel transaction");
+        break;
+      case '3':
+        choice = 3;
+        printf("\e[1;1H\e[2J");
+        printf("Choose how do you want to send money");
+        printf("\n  1.By username \n  2.By user ID\n=>3.Cancel transaction");
+        break;
+      case '\r':
+        if (choice == 1)
+        {
+          struct users recieverUser;
+
+          char to_user[64];
+          float send_amt;
+          printf("\e[1;1H\e[2J");
+          printf("Enter username: ");
+          scanf("%s", to_user);
+          printf("Enter the amount of money you want to transfer: ");
+          scanf("%f", &send_amt);
+          FILE *fp = fopen("users.txt", "r");
+
+          while (fscanf(fp, "%s %s %s %d %f", recieverUser.username, recieverUser.password, recieverUser.email, &recieverUser.custId, &recieverUser.balance) != EOF)
+          {
+            if (strcmp(to_user, recieverUser.username) == 0)
+            {
+              printf("\e[1;1H\e[2J");
+              printf("Transfering money... ");
+              fclose(fp);
+              Sleep(3000);
+
+              balance -= send_amt;
+              recieverUser.balance += send_amt;
+
+              FILE *old = fopen("users.txt", "r");
+              FILE *new = fopen("temp.txt", "w");
+              struct users del;
+
+              while (fscanf(old, "%s %s %s %d %f", del.username, del.password, del.email, &del.custId, &del.balance) != EOF)
+              {
+                if (strcmp(del.username, username) != 0 && strcmp(del.username, recieverUser.username) !=0)
+                  fprintf(new, "%s %s %s %d %f\n",
+                          del.username, del.password, del.email, del.custId, del.balance);
+              }
+
+              fprintf(new, "%s %s %s %d %f\n",
+                      username, password, email, id, balance);
+              fprintf(new, "%s %s %s %d %f\n",
+                      recieverUser.username, recieverUser.password, recieverUser.email, recieverUser.custId, recieverUser.balance);
+
+              fclose(old);
+              fclose(new);
+
+              remove("users.txt");
+              rename("temp.txt", "users.txt");
+              printf("\e[1;1H\e[2J");
+              printf("✅ Money has been transfered successfully.");
+              getch();
+              return 0;
+            }
+          }
+          printf("No such user found!!");
+          return 0;
+        }
+        else if (choice == 2)
+        {
+          choice = 2;
+        }
+        else
+        {
+          enter = 1;
+        }
+
+      default:
+        printf("\e[1;1H\e[2J");
+        printf("Choose how do you want to send money");
+        printf("\n  1.By username \n  2.By user ID\n  3.Cancel transaction");
+        break;
+      }
+    }
+  }
+  else {
+    printf("Wrong password, transaction cancelled.");
+    return 0;
+  }
+}
+
+int see_info(char username[], char password[],  char email[], int id, float balance) {
+  printf("\e[1;1H\e[2J");
+  printf("Username: %s\n", username);
+  printf("Email: %s\n", email);
+  printf("ID: %d\n", id);
+  printf("Current balance: %f\n", balance);
+  getch();
+  return 0;
+}
+
+int change_email(char username[], char password[], char email[], int id, float balance) {
+  char new_mail[64];
+  printf("\e[1;1H\e[2J");
+  printf("Enter your new email: ");
+  scanf("%s", new_mail);
+
+  FILE *fp1 = fopen("temp.txt", "w");
+  fprintf(fp1, "%s", new_mail);
+  fclose(fp1);
+
+  FILE *fp2 = popen("python send_otp.py", "r");
+  int auth;
+  fscanf(fp2, "%d", &auth);
+  pclose(fp2);
+
+  int otp;
+  FILE *fp3 = fopen("temp.txt", "r");
+  fscanf(fp3, "%d", &otp);
+  fclose(fp3);
+  remove("temp.txt");
+
+  int u_otp;
+  if (auth == 0)
+  {
+    int authorized = 0, attempts = 2;
+    while (!authorized || attempts == 0)
+    {
+      printf("Enter OTP: ");
+      scanf("%d", &u_otp);
+      if (otp == u_otp)
+      {
+        printf("\e[1;1H\e[2J");
+        printf("Verification successfull!\n");
+        getch();
+        authorized = 1;
+      }
+      else if (attempts == 0)
+      {
+        printf("\e[1;1H\e[2J");
+        printf("You have ran out of attempts. Try again later");
+        getch();
+        --attempts;
+        return 0;
+      }
+      else
+      {
+        printf("\e[1;1H\e[2J");
+        printf("Wrong OTP, please try again.\n");
+        // getch();
+        // printf("\e[1;1H\e[2J");
+        --attempts;
+      }
+    }
+  }
+  else
+  {
+    printf("\e[1;1H\e[2J");
+    printf("There is an error sending the mail, please try again later");
+    return 0;
+  }
+
+  printf("\e[1;1H\e[2J");
+  printf("Changing your email...");
+  Sleep(3000);
+  FILE *old = fopen("users.txt", "r");
+  FILE *new = fopen("temp.txt", "w");
+  struct users del;
+
+  while (fscanf(old, "%s %s %s %d %f",
+                del.username, del.password, del.email, &del.custId, &del.balance) != EOF)
+  {
+    if (strcmp(del.username, username) != 0)
+      fprintf(new, "%s %s %s %d %f\n",
+              del.username, del.password, del.email, del.custId, del.balance);
+  }
+
+  fprintf(new, "%s %s %s %d %f\n",
+          username, password, new_mail, id, balance);
+
+  fclose(old);
+  fclose(new);
+
+  remove("users.txt");
+  rename("temp.txt", "users.txt");
+  printf("\e[1;1H\e[2J");
+  printf("✅ Your email has been changed successfully.");
+  getch();
+}
+
+int account_info(char username[], char password[], char email[], int id, float balance)
 {
   int act = 0, enter = 0;
   char ch;
   printf("\e[1;1H\e[2J");
   printf("Welcome, %s!\n", username);
   printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-  printf("  1.See account information\n  2.Transfer money\n  3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
+  printf("  1.See account information\n  2.Transfer money\n  3.Apply for loan\n  4.Change email\n  5.Back to Login/Sign Up");
 
   while (enter != 1)
   {
@@ -47,52 +283,52 @@ int account_info(char username[])
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s\n!", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("=>1.See account information\n  2.Transfer money\n  3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
+      printf("=>1.See account information\n  2.Transfer money\n  3.Apply for loan\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
     case '2':
       act = 2;
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n=>2.Transfer money\n  3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
+      printf("  1.See account information\n=>2.Transfer money\n  3.Apply for loan\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
     case '3':
       act = 3;
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n  2.Transfer money\n=>3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
+      printf("  1.See account information\n  2.Transfer money\n=>3.Apply for loan\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
     case '4':
       act = 4;
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n  2.Transfer money\n  3.Change password\n=>4.Change email\n  5.Back to Login/Sign Up");
+      printf("  1.See account information\n  2.Transfer money\n  3.Apply for loan\n=>4.Change email\n  5.Back to Login/Sign Up");
       break;
     case '5':
       act = 5;
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n  2.Transfer money\n  3.Change password\n  4.Change email\n=>5.Back to Login/Sign Up");
+      printf("  1.See account information\n  2.Transfer money\n  3.Apply for loan\n  4.Change email\n=>5.Back to Login/Sign Up");
       break;
     case '\r':
       if (act == 1)
       {
-        in_prog();
+        see_info(username, password, email, id, balance);
       }
       else if (act == 2)
       {
-        in_prog();
+        transfer_money(username, password, email, id, balance);
       }
       else if (act == 3)
       {
-        in_prog();
+        in_prog;
       }
       else if (act == 4)
       {
-        in_prog();
+        change_email(username, password, email, id, balance);
       }
       else
       {
@@ -103,7 +339,7 @@ int account_info(char username[])
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n  2.Transfer money\n  3.Change password\n  4.Change email\n  5.Back to Login/Sign Up");
+      printf("  1.See account information\n  2.Transfer money\n  3.Apply for loan\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
     }
   }
@@ -119,7 +355,6 @@ int login()
     struct users userLogin;
 
     FILE *fp = fopen("users.txt", "r");
-    fclose(fp);
 
     if (fp == NULL)
     {
@@ -152,15 +387,16 @@ int login()
     }
     userLogin.password[i] = '\0'; // string terminate with \0 so we remove it by ts
 
-    char ent_user[64], ent_pass[64], ent_email[64];
-    while (fscanf(fp, "%s %s %s", ent_user, ent_pass, ent_email) != EOF)
+    struct users userLoginCheck;
+    while (fscanf(fp, "%s %s %s %d %f", userLoginCheck.username, userLoginCheck.password, userLoginCheck.email, &userLoginCheck.custId, &userLoginCheck.balance) != EOF)
     {
-      if (strcmp(userLogin.username, ent_user) == 0 && strcmp(userLogin.password, ent_pass) == 0)
+      if (strcmp(userLogin.username, userLoginCheck.username) == 0 && strcmp(userLogin.password, userLoginCheck.password) == 0)
       {
         printf("\nLogin Succesfull! ");
+        fclose(fp);
         getch();
-        account_info(userLogin.username);
         ver = 1;
+        account_info(userLogin.username, userLogin.password, userLoginCheck.email, userLoginCheck.custId, userLoginCheck.balance);
       }
       else
       {
@@ -168,6 +404,7 @@ int login()
         {
           printf("\nToo many attempts, try again later.");
           getch();
+          fclose(fp);
           return 0;
         }
         else
@@ -199,7 +436,7 @@ int signup()
   FILE *fp2 = popen("python send_otp.py", "r");
   int auth;
   fscanf(fp2, "%d", &auth);
-  fclose(fp2);
+  pclose(fp2);
   if (auth == 0)
   {
     int authorized = 0, attempts = 2;
@@ -267,14 +504,19 @@ int signup()
   }
   userSignIn.password[i] = '\0';
 
-  FILE *fp4 = fopen("users.txt", "a");
-  fprintf(fp4, "%s %s %s\n", userSignIn.username, userSignIn.password, userSignIn.email);
+  srand(time(NULL));
+  userSignIn.custId = rand();
 
-  printf("\nYour account has been created succesfully.");
+  FILE *fp4 = fopen("users.txt", "a");
+  fprintf(fp4, "%s %s %s %d 10000.0\n", userSignIn.username, userSignIn.password, userSignIn.email, userSignIn.custId);
+
+  printf("\n✅ Your account has been created succesfully.");
+  printf("\nYour unique id is: %d", userSignIn.custId);
+  printf("\nKindly remember this as you require this ID for future logins.");
   fclose(fp4);
 
   getch();
-  account_info(userSignIn.username);
+  account_info(userSignIn.username, userSignIn.password, userSignIn.email, userSignIn.custId, 10000.0);
 }
 
 int emp_login()
@@ -612,4 +854,5 @@ int main()
       break;
     }
   }
+
 }
