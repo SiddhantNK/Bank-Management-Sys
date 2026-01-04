@@ -668,6 +668,7 @@ int emp_login()
       printf("\n✅ Login Successfull!");
       fclose(fp);
       getch();
+      return 0;
     }
   }
   printf("\n❌ Invalid Employee ID or Password\n");
