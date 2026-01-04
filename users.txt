@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+Siddhi Chonkyguy siddhantkale1929@gmail.com
+sidu Hello siddhant.1251050203@vit.edu
+=======
 Siddhant Siddhant@vit sid@gmail.com 34569 10600.000000
 Ayaman 123 ayaman@vu 9228 9600.000000
 Fahim fahim@123 fahimgmail 46281 10200.000000
@@ -12,3 +16,4 @@ Imran imran@786 imran@yahoo.com 77102 6100.000000
 Pooja pooja@xyz pooja@gmail.com 58344 7200.000000
 Rahul rahul@abc rahul@outlook.com 29401 8600.000000
 Zoya zoya@999 zoya@gmail.com 66781 13400.000000
+>>>>>>> 6f3e69e555a7691f452628b20ed56038c02c1083

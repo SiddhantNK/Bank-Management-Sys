@@ -621,6 +621,208 @@ int signup()
   return 0;
 }
 
+int emp_daily()
+{
+  int enter = 0, menu = 0;
+  char ch;
+
+  printf("\e[1;1H\e[2J");
+  printf("Employee Daily with Customers \n");
+  printf("Press number keys to select between options and then press Enter\n");
+  printf("  1. View All Customers\n");
+  printf("  2. Search Customer by ID\n");
+  printf("  3. Delete Customer\n");
+  printf("  4. Exit\n");
+
+  while (enter != 1)
+  {
+    ch = getch();
+    switch (ch)
+    {
+    case '1':
+    menu = 1; 
+      printf("\e[1;1H\e[2J");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf(" ==>1. View All Customers\n");
+      printf("  2. Search Customer by ID\n");
+      printf("  3. Delete Customer\n");
+      printf("  4. Exit\n");
+
+    break;
+    case '2':
+     menu = 2;
+      printf("\e[1;1H\e[2J");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf("  1. View All Customers\n");
+      printf("  ==> 2. Search Customer by ID\n");
+      printf("  3. Delete Customer\n");
+      printf("  4. Exit\n");
+
+     break;
+    case '3':
+    menu = 3;
+         printf("\e[1;1H\e[2J");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf("  1. View All Customers\n");
+      printf("  2. Search Customer by ID\n");
+      printf(" ==>  3. Delete Customer\n");
+      printf("  4. Exit\n");
+     break;
+    case '4':
+     menu = 4; 
+        printf("\e[1;1H\e[2J");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf("  1. View All Customers\n");
+      printf("  2. Search Customer by ID\n");
+      printf("  3. Delete Customer\n");
+      printf(" ==>  4. Exit\n");
+     break;
+
+    case '\r':
+
+      if (menu == 1)
+      {
+        FILE *fp;
+        char username[64], password[64], email[64];
+        int custId;
+        float balance;
+
+        printf("\e[1;1H\e[2J");
+        fp = fopen("users.txt", "r");
+        if (fp == NULL)
+        {
+          printf(" No customer data found.\n");
+          getch();
+          break;
+        }
+
+        printf("USERNAME\tEMAIL\t\tID\tBALANCE\n");
+        printf("--------------------------------------------------\n");
+
+        while (fscanf(fp, "%s %s %s %d %f",
+                      username, password, email, &custId, &balance) != EOF)
+        {
+          printf("%s\t%s\t%d\t%.2f\n",
+                 username, email, custId, balance);
+        }
+
+        fclose(fp);
+        getch();
+      }
+
+      else if (menu == 2)
+      {
+        FILE *fp;
+        int id, found = 0;
+        char username[64], password[64], email[64];
+        int custId;
+        float balance;
+
+        printf("\e[1;1H\e[2J");
+        printf("Enter Customer ID: ");
+        scanf("%d", &id);
+
+        fp = fopen("users.txt", "r");
+        if (fp == NULL)
+        {
+          printf(" File not found.\n");
+          getch();
+          break;
+        }
+
+        while (fscanf(fp, "%s %s %s %d %f",
+                      username, password, email, &custId, &balance) != EOF)
+        {
+          if (custId == id)
+          {
+            printf("\nCustomer Found\n");
+            printf("-----------------\n");
+            printf("Username : %s\n", username);
+            printf("Email    : %s\n", email);
+            printf("ID       : %d\n", custId);
+            printf("Balance  : %.2f\n", balance);
+            found = 1;
+            break;
+          }
+        }
+
+        fclose(fp);
+
+        if (!found)
+          printf("\n Customer not found!");
+
+        getch();
+      }
+
+      else if (menu == 3)
+      {
+        FILE *fp, *temp;
+        int id, found = 0;
+        char username[64], password[64], email[64];
+        int custId;
+        float balance;
+
+        printf("\e[1;1H\e[2J");
+        printf("Enter Customer ID to delete: ");
+        scanf("%d", &id);
+
+        fp = fopen("users.txt", "r");
+        temp = fopen("temp.txt", "w");
+
+        if (fp == NULL || temp == NULL)
+        {
+          printf(" File error.\n");
+          getch();
+          break;
+        }
+
+        while (fscanf(fp, "%s %s %s %d %f",
+                      username, password, email, &custId, &balance) != EOF)
+        {
+          if (custId != id)
+          {
+            fprintf(temp, "%s %s %s %d %.2f\n",
+                    username, password, email, custId, balance);
+          }
+          else
+          {
+            found = 1;
+          }
+        }
+
+        fclose(fp);
+        fclose(temp);
+
+        remove("users.txt");
+        rename("temp.txt", "users.txt");
+
+        if (found)
+          printf("\n✅ Customer deleted successfully.");
+        else
+          printf("\n❌ Customer ID not found.");
+
+        getch();
+      }
+
+     
+      else if (menu == 4)
+      {
+        enter = 1;
+      }
+
+      printf("\e[1;1H\e[2J");
+      printf("Employee Daily Operations\n");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf("  1. View All Customers\n");
+      printf("  2. Search Customer by ID\n");
+      printf("  3. Delete Customer\n");
+      printf("  4. Exit\n");
+      break;
+    }
+  }
+  return 0;
+}
+
 int emp_login()
 {
   printf("\e[1;1H\e[2J");
@@ -629,12 +831,13 @@ int emp_login()
   FILE *fp = fopen("employees.txt", "r");
   int ent_id;
   char ent_user[64], ent_pass[64], ent_email[64];
+  int found = 0;
 
   if (fp == NULL)
   {
     printf("No employee found!\n");
     getch();
-    return 0;
+    return 1;
   }
 
   printf("Enter Employee ID: ");
@@ -645,13 +848,10 @@ int emp_login()
   printf("Enter your password: ");
   while ((ch = getch()) != '\r')
   {
-    if (ch == 8)
+    if (ch == 8 && i > 0)
     {
-      if (i > 0)
-      {
-        printf("\b \b");
-        employeeLogin.password[i--] = '\0';
-      }
+      printf("\b \b");
+      employeeLogin.password[--i] = '\0';
     }
     else
     {
@@ -661,20 +861,39 @@ int emp_login()
   }
   employeeLogin.password[i] = '\0';
 
-  while (fscanf(fp, "%s %s %s %d", ent_user, ent_pass, ent_email, &ent_id) != EOF)
+  while (fscanf(fp, "%s %s %s %d",
+                ent_user, ent_pass, ent_email, &ent_id) != EOF)
   {
-    if (employeeLogin.empId == ent_id && strcmp(employeeLogin.password, ent_pass) == 0)
+    if (employeeLogin.empId == ent_id &&
+        strcmp(employeeLogin.password, ent_pass) == 0)
     {
+<<<<<<< HEAD
       printf("\n✅ Login Successfull!");
       fclose(fp);
       getch();
       return 0;
+=======
+      found = 1;
+      break;
+>>>>>>> 63c436a187497fb003bf20eac4386fa09933fc61
     }
   }
-  printf("\n❌ Invalid Employee ID or Password\n");
+
   fclose(fp);
-  getch();
-  return 1;
+
+  if (found)
+  {
+    printf("\n✅ Login Successful!");
+    getch();
+    emp_daily();   
+    return 0;
+  }
+  else
+  {
+    printf("\n❌ Invalid Employee ID or Password");
+    getch();
+    return 1;
+  }
 }
 
 int emp_signup()
@@ -778,6 +997,7 @@ int emp_signup()
 
   getch();
 }
+
 
 int user_menu()
 {
@@ -894,7 +1114,7 @@ int employee_menu()
   return 0;
 }
 
-int main()
+int main()  
 {
   int choice = 0, enter = 0;
   char ch;
