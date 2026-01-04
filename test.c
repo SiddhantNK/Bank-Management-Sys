@@ -18,7 +18,15 @@ struct users
   char password[100];
 };
  char time_buffer[80];
+  
+ struct employee
+ {
+    int emp_code;
+    char emp_name[50];
+    float salary;
+    char department[50];
 
+ };  
 
 int in_prog()
 {
@@ -252,11 +260,118 @@ int user_menu()
   }
   return 0;
 }
+int create_id(){
 
-int employee_menu()
-{
   printf("\e[1;1H\e[2J");
-  printf(YELLOW"In Progress...Please come back later\nPress any key to return"RESET);
+  struct employee emp;
+  FILE *emp_file = fopen("employees.txt", "a");
+  printf(BLUE"Enter Employee Code: "RESET);
+  scanf("%d", &emp.emp_code);
+  printf(BLUE"Enter Employee Name: "RESET);
+  scanf("%s", emp.emp_name);
+  printf(BLUE"Enter Employee Salary: "RESET);
+  scanf("%f", &emp.salary);
+  printf(BLUE"Enter Employee Department: "RESET);
+  scanf("%s", emp.department);
+
+  fprintf(emp_file, "%d %s %.2f %s\n", emp.emp_code, emp.emp_name, emp.salary, emp.department);
+  fclose(emp_file);
+  printf(GREEN"\nEmployee ID created successfully.\n"RESET);
+  getch();
+  return 0;
+}
+int emp_login(){
+  struct employee emp;
+  int code, found = 0;
+  printf("\e[1;1H\e[2J");
+  printf(BLUE"Enter your Employee ID: "RESET);
+  scanf("%d", &code);
+  FILE *emp_file = fopen("employees.txt", "r");
+  while (fscanf(emp_file, "%d %s %f %s", &emp.emp_code, emp.emp_name, &emp.salary, emp.department) != EOF)
+  {
+    if (emp.emp_code == code)
+    {
+      found = 1;
+      break;
+    }
+  }
+  fclose(emp_file);
+  if (found)
+  {
+    printf(GREEN"\nLogin successful. Welcome, %s!\n"RESET, emp.emp_name);
+    printf("Employee Code: %d\n", emp.emp_code);
+    printf("Salary: %.2f\n", emp.salary);
+    printf("Department: %s\n", emp.department);
+  }
+  else
+  {
+    printf(RED"\nEmployee ID not found. Please try again.\n"RESET);
+  }
+
+ 
+  getch();
+  return 0;
+}
+int employee_menu()
+{ int enter = 0, menu = 0,i=0;
+  char ch;
+  printf("\e[1;1H\e[2J");
+  // printf(YELLOW"In Progress...Please come back later\nPress any key to return"RESET);
+  // printf(WHITE"\nPress number keys to select between options and then press Enter\n"RESET);
+  printf("1.Login in with your employee ID\n");
+  printf("2.Create new Employee ID\n");
+  printf("3.Exit to main screen\n");
+  while (enter != 1)
+  {
+    ch = getch();
+    switch (ch)
+    {
+    case '1':
+      menu = 1;
+      printf("\e[1;1H\e[2J");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf(GREEN">1.Login in with your employee ID\n"RESET);
+        printf(WHITE"2.Create new Employee ID\n"RESET);
+        printf (RED"3.Exit to main screen"RESET);
+      break;
+    case '2':
+      menu = 2;
+      printf("\e[1;1H\e[2J");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf(WHITE"1.Login in with your employee ID\n"RESET);
+      printf(GREEN">2.Create new Employee ID\n"RESET);
+      printf (RED"3.Exit to main screen"RESET);
+      break;
+    case '3':
+      menu = 3;
+      printf("\e[1;1H\e[2J");
+      printf("Press number keys to select between options and then press Enter\n");
+      printf(WHITE"\n 1.Login in with your employee ID\n"RESET);
+      printf (WHITE"2.Create new Employee ID\n"RESET);
+      printf(RED">3.Exit to main screen"RESET);
+      break;
+    case '\r':
+      if (menu == 1)
+      {
+        emp_login();
+      }
+      else if (menu == 2)
+      {
+        create_id();
+      }
+      else
+      {
+        enter = 1;
+      }
+    default:
+      printf("\e[1;1H\e[2J");
+      printf(WHITE"Press number keys to select between options and then press Enter\n"RESET);
+      printf("\n .Login in with your employee ID\n 2.Create new Employee ID\n 3.Exit to main screen");
+      break;
+    }
+  }
+
+
   getch();
   return 0;
 }
