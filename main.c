@@ -238,7 +238,9 @@ int transfer_money(char username[])
             }
           }
           printf("No such user found!!");
+          return 1;
           fclose(fp);
+          getch();
           return 0;
         }
         else
@@ -643,7 +645,7 @@ int emp_daily()
     menu = 1; 
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
-      printf(" ==>1. View All Customers\n");
+      printf("=>1. View All Customers\n");
       printf("  2. Search Customer by ID\n");
       printf("  3. Delete Customer\n");
       printf("  4. Exit\n");
@@ -654,7 +656,7 @@ int emp_daily()
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
       printf("  1. View All Customers\n");
-      printf("  ==> 2. Search Customer by ID\n");
+      printf("=>2. Search Customer by ID\n");
       printf("  3. Delete Customer\n");
       printf("  4. Exit\n");
 
@@ -665,7 +667,7 @@ int emp_daily()
       printf("Press number keys to select between options and then press Enter\n");
       printf("  1. View All Customers\n");
       printf("  2. Search Customer by ID\n");
-      printf(" ==>  3. Delete Customer\n");
+      printf("=>3. Delete Customer\n");
       printf("  4. Exit\n");
      break;
     case '4':
@@ -675,7 +677,7 @@ int emp_daily()
       printf("  1. View All Customers\n");
       printf("  2. Search Customer by ID\n");
       printf("  3. Delete Customer\n");
-      printf(" ==>  4. Exit\n");
+      printf("=>4. Exit\n");
      break;
 
     case '\r':
@@ -810,6 +812,7 @@ int emp_daily()
         enter = 1;
       }
 
+    default:
       printf("\e[1;1H\e[2J");
       printf("Employee Daily Operations\n");
       printf("Press number keys to select between options and then press Enter\n");
@@ -867,15 +870,8 @@ int emp_login()
     if (employeeLogin.empId == ent_id &&
         strcmp(employeeLogin.password, ent_pass) == 0)
     {
-<<<<<<< HEAD
-      printf("\n✅ Login Successfull!");
-      fclose(fp);
-      getch();
-      return 0;
-=======
       found = 1;
       break;
->>>>>>> 63c436a187497fb003bf20eac4386fa09933fc61
     }
   }
 
@@ -997,7 +993,6 @@ int emp_signup()
 
   getch();
 }
-
 
 int user_menu()
 {
