@@ -1,2 +1,14 @@
-Siddhant Siddhant@vit sid@gmail.com 34569 43634.000000
-Fahim fahim@123 fahim745@gmail.com 46281 9973.000000
+Siddhant Siddhant@vit sid@gmail.com 34569 10600.000000
+Ayaman 123 ayaman@vu 9228 9600.000000
+Fahim fahim@123 fahimgmail 46281 10200.000000
+dummy dummy123 dummy@gmail.com 46626 200.000000
+Rohan rohan@123 rohan@gmail.com 78123 5400.000000
+Ayesha ayesha#45 ayesha@yahoo.com 33901 8700.000000
+Kabir kabir@321 kabir@outlook.com 65490 12000.000000
+Neha neha@pass neha@gmail.com 11872 4300.000000
+Arjun arjun@007 arjun@vit.edu 90214 15000.000000
+Sara sara@111 sara@gmail.com 44519 9800.000000
+Imran imran@786 imran@yahoo.com 77102 6100.000000
+Pooja pooja@xyz pooja@gmail.com 58344 7200.000000
+Rahul rahul@abc rahul@outlook.com 29401 8600.000000
+Zoya zoya@999 zoya@gmail.com 66781 13400.000000

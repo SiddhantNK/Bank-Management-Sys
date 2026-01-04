@@ -17,6 +17,19 @@ struct users
 
 struct users current_user_details;
 
+int fetch_user(char username[])
+{
+  FILE *fp = fopen("users.txt", "r");
+  while (fscanf(fp, "%s %s %s %d %f", current_user_details.username, current_user_details.password, current_user_details.email, &current_user_details.custId, &current_user_details.balance) != EOF)
+  {
+    if (strcmp(current_user_details.username, username) == 0)
+    {
+      fclose(fp);
+      return 0;
+    }
+  }
+}
+
 struct employee
 {
   int empId;
@@ -33,7 +46,7 @@ int in_prog()
   getch();
 }
 
-int transfer_money(char username[], char password[], char email[], int id, float balance)
+int transfer_money(char username[])
 {
   int i = 0;
   char ch, pass[64];
@@ -57,9 +70,16 @@ int transfer_money(char username[], char password[], char email[], int id, float
   }
   pass[i] = '\0';
 
-  if (strcmp(pass, password) == 0) {
+  if (strcmp(pass, current_user_details.password) == 0)
+  {
     char ch;
     int choice, enter;
+    if (current_user_details.balance == 0.0) {
+      printf("\e[1;1H\e[2J");
+      printf("You have no money to transfer!");
+      getch();
+      return 1;
+    }
     printf("\e[1;1H\e[2J");
     printf("Choose how do you want to send money");
     printf("\n  1.By username \n  2.By user ID\n  3.Cancel transaction");
@@ -96,8 +116,21 @@ int transfer_money(char username[], char password[], char email[], int id, float
           printf("\e[1;1H\e[2J");
           printf("Enter username: ");
           scanf("%s", to_user);
+          if (strcmp(to_user, current_user_details.username) == 0) {
+            printf("\e[1;1H\e[2J");
+            printf("You cannot transfer money to yourself!");
+            getch();
+            return 1;
+          }
           printf("Enter the amount of money you want to transfer: ");
           scanf("%f", &send_amt);
+          if (send_amt <= 0 || send_amt > current_user_details.balance)
+          {
+            printf("Invalid amount!");
+            getch();
+            return 1;
+          }
+
           FILE *fp = fopen("users.txt", "r");
 
           while (fscanf(fp, "%s %s %s %d %f", recieverUser.username, recieverUser.password, recieverUser.email, &recieverUser.custId, &recieverUser.balance) != EOF)
@@ -109,7 +142,7 @@ int transfer_money(char username[], char password[], char email[], int id, float
               fclose(fp);
               Sleep(3000);
 
-              balance -= send_amt;
+              current_user_details.balance -= send_amt;
               recieverUser.balance += send_amt;
 
               FILE *old = fopen("users.txt", "r");
@@ -118,13 +151,13 @@ int transfer_money(char username[], char password[], char email[], int id, float
 
               while (fscanf(old, "%s %s %s %d %f", del.username, del.password, del.email, &del.custId, &del.balance) != EOF)
               {
-                if (strcmp(del.username, username) != 0 && strcmp(del.username, recieverUser.username) !=0)
+                if (strcmp(del.username, username) != 0 && strcmp(del.username, recieverUser.username) != 0)
                   fprintf(new, "%s %s %s %d %f\n",
                           del.username, del.password, del.email, del.custId, del.balance);
               }
 
               fprintf(new, "%s %s %s %d %f\n",
-                      username, password, email, id, balance);
+                      current_user_details.username, current_user_details.password, current_user_details.email, current_user_details.custId, current_user_details.balance);
               fprintf(new, "%s %s %s %d %f\n",
                       recieverUser.username, recieverUser.password, recieverUser.email, recieverUser.custId, recieverUser.balance);
 
@@ -140,11 +173,73 @@ int transfer_money(char username[], char password[], char email[], int id, float
             }
           }
           printf("No such user found!!");
+          getch();
+          fclose(fp);
           return 0;
         }
         else if (choice == 2)
         {
           choice = 2;
+          struct users recieverUser;
+
+          int to_user;
+          float send_amt;
+          printf("\e[1;1H\e[2J");
+          printf("Enter user ID: ");
+          scanf("%d", &to_user);
+          printf("Enter the amount of money you want to transfer: ");
+          scanf("%f", &send_amt);
+          if (send_amt <= 0 || send_amt > current_user_details.balance)
+          {
+            printf("Invalid amount!");
+            getch();
+            return 0;
+          }
+
+          FILE *fp = fopen("users.txt", "r");
+
+          while (fscanf(fp, "%s %s %s %d %f", recieverUser.username, recieverUser.password, recieverUser.email, &recieverUser.custId, &recieverUser.balance) != EOF)
+          {
+            if (to_user == recieverUser.custId)
+            {
+              printf("\e[1;1H\e[2J");
+              printf("Transfering money... ");
+              fclose(fp);
+              Sleep(3000);
+
+              current_user_details.balance -= send_amt;
+              recieverUser.balance += send_amt;
+
+              FILE *old = fopen("users.txt", "r");
+              FILE *new = fopen("temp.txt", "w");
+              struct users del;
+
+              while (fscanf(old, "%s %s %s %d %f", del.username, del.password, del.email, &del.custId, &del.balance) != EOF)
+              {
+                if (strcmp(del.username, username) != 0 && strcmp(del.username, recieverUser.username) != 0)
+                  fprintf(new, "%s %s %s %d %f\n",
+                          del.username, del.password, del.email, del.custId, del.balance);
+              }
+
+              fprintf(new, "%s %s %s %d %f\n",
+                      current_user_details.username, current_user_details.password, current_user_details.email, current_user_details.custId, current_user_details.balance);
+              fprintf(new, "%s %s %s %d %f\n",
+                      recieverUser.username, recieverUser.password, recieverUser.email, recieverUser.custId, recieverUser.balance);
+
+              fclose(old);
+              fclose(new);
+
+              remove("users.txt");
+              rename("temp.txt", "users.txt");
+              printf("\e[1;1H\e[2J");
+              printf("✅ Money has been transfered successfully.");
+              getch();
+              return 0;
+            }
+          }
+          printf("No such user found!!");
+          fclose(fp);
+          return 0;
         }
         else
         {
@@ -159,23 +254,27 @@ int transfer_money(char username[], char password[], char email[], int id, float
       }
     }
   }
-  else {
+  else
+  {
     printf("Wrong password, transaction cancelled.");
     return 0;
   }
 }
 
-int see_info(char username[], char password[],  char email[], int id, float balance) {
+int see_info(char username[])
+{
+  fetch_user(username);
   printf("\e[1;1H\e[2J");
-  printf("Username: %s\n", username);
-  printf("Email: %s\n", email);
-  printf("ID: %d\n", id);
-  printf("Current balance: %f\n", balance);
+  printf("Username: %s\n", current_user_details.username);
+  printf("Email: %s\n", current_user_details.email);
+  printf("ID: %d\n", current_user_details.custId);
+  printf("Current balance: %f\n", current_user_details.balance);
   getch();
   return 0;
 }
 
-int change_email(char username[], char password[], char email[], int id, float balance) {
+int change_email()
+{
   char new_mail[64];
   printf("\e[1;1H\e[2J");
   printf("Enter your new email: ");
@@ -246,13 +345,13 @@ int change_email(char username[], char password[], char email[], int id, float b
   while (fscanf(old, "%s %s %s %d %f",
                 del.username, del.password, del.email, &del.custId, &del.balance) != EOF)
   {
-    if (strcmp(del.username, username) != 0)
+    if (strcmp(del.username, current_user_details.username) != 0)
       fprintf(new, "%s %s %s %d %f\n",
               del.username, del.password, del.email, del.custId, del.balance);
   }
 
   fprintf(new, "%s %s %s %d %f\n",
-          username, password, new_mail, id, balance);
+          current_user_details.username, current_user_details.password, new_mail, current_user_details.custId, current_user_details.balance);
 
   fclose(old);
   fclose(new);
@@ -261,11 +360,13 @@ int change_email(char username[], char password[], char email[], int id, float b
   rename("temp.txt", "users.txt");
   printf("\e[1;1H\e[2J");
   printf("✅ Your email has been changed successfully.");
+  fetch_user(current_user_details.username);
   getch();
 }
 
-int account_info(char username[], char password[], char email[], int id, float balance)
+int account_info(char username[])
 {
+  fetch_user(username);
   int act = 0, enter = 0;
   char ch;
   printf("\e[1;1H\e[2J");
@@ -281,7 +382,7 @@ int account_info(char username[], char password[], char email[], int id, float b
     case '1':
       act = 1;
       printf("\e[1;1H\e[2J");
-      printf("Welcome, %s\n!", username);
+      printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
       printf("=>1.See account information\n  2.Transfer money\n  3.Apply for loan\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
@@ -316,19 +417,19 @@ int account_info(char username[], char password[], char email[], int id, float b
     case '\r':
       if (act == 1)
       {
-        see_info(username, password, email, id, balance);
+        see_info(username);
       }
       else if (act == 2)
       {
-        transfer_money(username, password, email, id, balance);
+        transfer_money(username);
       }
       else if (act == 3)
       {
-        in_prog;
+        in_prog();
       }
       else if (act == 4)
       {
-        change_email(username, password, email, id, balance);
+        change_email();
       }
       else
       {
@@ -393,28 +494,28 @@ int login()
       if (strcmp(userLogin.username, userLoginCheck.username) == 0 && strcmp(userLogin.password, userLoginCheck.password) == 0)
       {
         printf("\nLogin Succesfull! ");
+        fetch_user(userLogin.username);
         fclose(fp);
         getch();
         ver = 1;
-        account_info(userLogin.username, userLogin.password, userLoginCheck.email, userLoginCheck.custId, userLoginCheck.balance);
-      }
-      else
-      {
-        if (attempts == 0)
-        {
-          printf("\nToo many attempts, try again later.");
-          getch();
-          fclose(fp);
-          return 0;
-        }
-        else
-        {
-          printf("\nWrong credentials! Please try again");
-          getch();
-        }
+        account_info(userLogin.username);
+        return 0;
       }
     }
     --attempts;
+
+    if (attempts == 0)
+    {
+      printf("\nToo many attempts, try again later.");
+      getch();
+      fclose(fp);
+      return 0;
+    }
+    else
+    {
+      printf("\nWrong credentials! Please try again");
+      getch();
+    }
   }
 }
 
@@ -456,7 +557,6 @@ int signup()
         printf("Verification successfull!\n");
         getch();
         authorized = 1;
-        // return 0;
       }
       else if (attempts == 0)
       {
@@ -464,7 +564,7 @@ int signup()
         printf("You have ran out of attempts. Try again later");
         getch();
         --attempts;
-        return 0;
+        return 1;
       }
       else
       {
@@ -480,7 +580,7 @@ int signup()
   {
     printf("\e[1;1H\e[2J");
     printf("There is an error sending the mail, please try again later");
-    return 0;
+    return 1;
   }
 
   int i = 0;
@@ -512,11 +612,13 @@ int signup()
 
   printf("\n✅ Your account has been created succesfully.");
   printf("\nYour unique id is: %d", userSignIn.custId);
-  printf("\nKindly remember this as you require this ID for future logins.");
+  printf("\nKindly remember this as you require this ID for future transactions.");
   fclose(fp4);
 
   getch();
-  account_info(userSignIn.username, userSignIn.password, userSignIn.email, userSignIn.custId, 10000.0);
+  fetch_user(userSignIn.username);
+  account_info(userSignIn.username);
+  return 0;
 }
 
 int emp_login()
@@ -567,13 +669,10 @@ int emp_login()
       fclose(fp);
       getch();
     }
-    else
-    {
-      printf("\n❌ Invalid Employee ID or Password\n");
-      fclose(fp);
-      getch();
-    }
   }
+  printf("\n❌ Invalid Employee ID or Password\n");
+  fclose(fp);
+  getch();
   return 1;
 }
 
@@ -854,5 +953,4 @@ int main()
       break;
     }
   }
-
 }
