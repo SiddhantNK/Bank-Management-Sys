@@ -146,7 +146,7 @@ int transfer_money(char username[])
               recieverUser.balance += send_amt;
 
               FILE *old = fopen("users.txt", "r");
-              FILE *new = fopen("temp.txt", "w");
+              FILE *new = fopen("transfer.txt", "w");
               struct users del;
 
               while (fscanf(old, "%s %s %s %d %f", del.username, del.password, del.email, &del.custId, &del.balance) != EOF)
@@ -165,7 +165,7 @@ int transfer_money(char username[])
               fclose(new);
 
               remove("users.txt");
-              rename("temp.txt", "users.txt");
+              rename("transfer.txt", "users.txt");
               printf("\e[1;1H\e[2J");
               printf("✅ Money has been transfered successfully.");
               getch();
