@@ -5,7 +5,21 @@
 #include <time.h>
 #include <windows.h>
 #include <math.h>
+#include <shellapi.h> 
 
+void show_about_image() {
+    ShellExecuteA(NULL, "open","C:/Users/Siddhant Kale/Pictures/fordp.jpg",NULL,NULL,SW_SHOWNORMAL);
+
+printf("\n-----------------------------------------------\n");
+printf("About Our Team:\n");
+printf("A group of motivated individuals committed to innovation,\n");
+printf("learning, and delivering effective solutions through teamwork.\n");
+printf("-----------------------------------------------\n");
+
+    printf("Press Enter to continue...");
+    getchar();
+    getchar(); 
+}
 struct users
 {
   int custId;
@@ -1494,6 +1508,172 @@ int employee_menu()
   return 0;
 }
 
+int about_us(){
+  int choice;
+    int aboutUs;
+    int team;
+
+
+      printf("\e[1;1H\e[2J");
+    printf("\n=================================================\n");
+    printf("        LAXMI CHIT FUND - INFORMATION MENU\n");
+    printf("=================================================\n");
+  
+    printf("1. About Us\n");
+    printf("2. Meet Our Team\n\n");
+
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    getchar();  
+
+
+    switch (choice) {
+
+        case 1:
+      printf("\e[1;1H\e[2J");
+    printf("\n===================================================================\n");
+    printf("                            ABOUT US\n");
+    printf("=====================================================================\n\n");
+
+    printf("Welcome to Laxmi Chit Fund...!!!\n\n");
+    printf("Experience transparent and seamless banking with security at every step.\n");
+
+    printf("We aim to provide superior and proactive banking services while delivering cost-\n");
+    printf("effective and responsive solutions.\n");
+    printf("We work for you 24x7 to make your future better, smarter, and goal-oriented.\n\n");
+
+    printf("1. Vision and Values\n");
+    printf("2. Safe Banking\n");
+    printf("Enter your choice: ");
+    scanf("%d", &aboutUs);
+    getch();
+
+    switch (aboutUs) {
+
+
+        case 1:
+
+      printf("\e[1;1H\e[2J");
+    printf("---------------------------------------------------------------------\n");
+    printf("                            OUR MISSION\n");
+    printf("---------------------------------------------------------------------\n\n");
+
+    printf("To provide superior and proactive banking services to niche markets globally while\n");
+    printf("delivering cost-effective and responsive solutions, meeting stakeholder needs.\n\n");
+
+    printf("---------------------------------------------------------------------\n");
+    printf("                             OUR VISION\n");
+    printf("---------------------------------------------------------------------\n\n");
+
+    printf("To become the bank of choice for corporates,medium businesses, retail customers,\n");
+    printf("and to support rural and mass-market banking.\n\n");
+
+    printf("---------------------------------------------------------------------\n");
+    printf("                          OUR CORE VALUES\n");
+    printf("---------------------------------------------------------------------\n\n");
+
+    printf("Ethical Banking:\n");
+    printf("We believe in transparency, simplified communication, and fair practices.\n\n");
+
+    printf("Customer-Friendly Banking:\n");
+    printf("We follow a customer-first approach and aim to make banking simple and accessible.\n\n");
+
+    printf("Integrity:\n");
+    printf("A bank operates with honesty, transparency, and strong ethical principles in all financial dealings.\n\n");
+
+    printf("Trust & Reliability:\n");
+    printf("Building and maintaining customer trust by safeguarding money, data, and financial interests.\n\n");
+
+    printf("Accountability:\n");
+    printf("Taking responsibility for decisions, actions, and outcomes while ensuring regulatory compliance.\n\n");
+
+    printf("Confidentiality & Security:\n");
+    printf("Protecting customer information and ensuring secure transactions at all times.\n\n");
+      getch();
+    break;
+        case 2:
+        printf("\e[1;1H\e[2J");
+    printf("---------------------------------------------------------------------\n");
+    printf("                           SAFE BANKING\n");
+    printf("---------------------------------------------------------------------\n\n");
+      printf("Beat the Fear. Beat the Greed. Beat the Cheats.\n");
+    printf("Fraudsters are getting smarter, but awareness keeps you protected.\n\n");
+
+    printf("Stay smart. Stay alert. Stay safe.\n");
+    printf("Follow safe banking practices always.\n");
+
+    printf("------------------------------------------------------------------------\n");
+    printf("                   RULES AND REGULATIONS OF SAFE BANKING\n");
+    printf("------------------------------------------------------------------------\n\n");
+
+    printf("# Keep your PIN, passwords, and OTP private\n");
+    printf("# Use strong passwords and official bank apps only\n");
+    printf("# Avoid public Wi-Fi for transactions\n");
+    printf("# Log out after online banking sessions\n");
+    printf("# Log out after online banking sessions\n");
+    printf("# Use only official bank websites and apps\n");
+    printf("# Check alerts and report suspicious activity immediately\n\n\n");
+      getch();
+    break;
+
+    default:
+            printf("\nInvalid choice! Please enter a number between 1 and 2.\n");
+              getch();
+          }
+
+
+    break;
+
+
+    case 2:
+    printf("\e[1;1H\e[2J");
+    printf("-----------------------------------------------------------------\n");
+    printf("                         MEET OUR TEAM\n");
+    printf("----------------------------------------------------------------\n\n");
+    
+    printf("1. Display Info\n");
+    printf("2. Display image\n");
+    printf("Enter your choice: ");
+    scanf("%d", &team);
+
+    switch (team) {
+
+        case 1:
+    
+    printf("Janvhi Kardure\n");
+    printf("Janhavi Pawar\n");
+    printf("Himali Deshmukh\n");
+    printf("Mohammed Fahim Jamadar\n");
+    printf("Siddhant Kale\n");
+    printf("");
+        getch();
+    break;
+
+    case 2:
+      show_about_image();   
+       break;
+
+    default:
+            printf("\nInvalid choice! Please enter a number between 1 and 2.\n");
+              getch();
+          }
+    break;
+
+     
+    default:
+              printf("\nInvalid choice! Please enter a number between 1 and 2.\n");
+                getch();
+    
+          }
+
+
+
+    printf("\n====================================================================\n");
+    return 0;
+
+
+}
+
 int main()  
 {
   int choice = 0, enter = 0;
@@ -1502,7 +1682,7 @@ int main()
   printf("\e[1;1H\e[2J");
   printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
   printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-  printf("  1.Employee Platform \n  2.Customer Platform\n  3.Exit Application");
+  printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n  4.Exit Application");
 
   while (enter != 1)
   {
@@ -1514,22 +1694,30 @@ int main()
       printf("\e[1;1H\e[2J");
       printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-      printf("=>1.Employee Platform \n  2.Customer Platform\n  3.Exit Application");
+      printf("=>1.Employee Platform \n  2.Customer Platform\n  3.About us\n  4.Exit Application");
       break;
     case '2':
       choice = 2;
       printf("\e[1;1H\e[2J");
       printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-      printf("  1.Employee Platform \n=>2.Customer Platform\n  3.Exit Application");
+      printf("  1.Employee Platform \n=>2.Customer Platform\n  3.About us\n  4.Exit Application");
       break;
     case '3':
       choice = 3;
       printf("\e[1;1H\e[2J");
       printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-      printf("  1.Employee Platform \n  2.Customer Platform\n=>3.Exit Application");
+      printf("  1.Employee Platform \n  2.Customer Platform\n=>3.About us\n  4.Exit Application");
       break;
+      case '4':
+      choice = 4;
+      printf("\e[1;1H\e[2J");
+      printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
+      printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
+      printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n=>4.Exit Application");
+      break;
+
     case '\r':
       if (choice == 1)
       {
@@ -1541,6 +1729,15 @@ int main()
         user_menu();
         choice = 2;
       }
+      else if(choice == 3)
+      {
+        about_us();
+        choice =3;
+      }
+      else if (choice == 4)
+      {
+        enter = 1;
+      }
       else
       {
         enter = 1;
@@ -1550,7 +1747,8 @@ int main()
       printf("\e[1;1H\e[2J");
       printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-      printf("  1.Employee Platform \n  2.Customer Platform\n  3.Exit Application");
+      printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n  4.Exit Application");
+
       break;
     }
   }
