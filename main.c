@@ -954,18 +954,18 @@ int emp_daily()
           break;
         }
 
-        printf("USERNAME\tEMAIL\t\tID\tBALANCE\n");
-        printf("--------------------------------------------------\n");
-
-        while (fscanf(fp, "%s %s %s %d %f",
-                      username, password, email, &custId, &balance) != EOF)
-        {
-          printf("%s\t%s\t%d\t%.2f\n",
-                 username, email, custId, balance);
-        }
+               while (fscanf(fp, "%63s %63s %63s %d %f",
+                username, password, email, &custId, &balance) == 5)
+                {
+                  printf("%s\t%s\t%d\t%.2f\n",
+                    username, email, custId, balance);
+                }
 
         fclose(fp);
+        printf("\nPress any key to return to menu...");
         getch();
+        menu=0;
+
       }
 
       else if (menu == 2)
@@ -1000,6 +1000,7 @@ int emp_daily()
             printf("ID       : %d\n", custId);
             printf("Balance  : %.2f\n", balance);
             found = 1;
+            printf("\nPress any key to return to menu...");
             break;
           }
         }
@@ -1058,7 +1059,7 @@ int emp_daily()
           printf("\n✅ Customer deleted successfully.");
         else
           printf("\n❌ Customer ID not found.");
-
+          printf("\nPress any key to return to menu...");
         getch();
       }
 
@@ -1067,6 +1068,7 @@ int emp_daily()
       {
         enter = 1;
       }
+      break;
 
     default:
       printf("\e[1;1H\e[2J");

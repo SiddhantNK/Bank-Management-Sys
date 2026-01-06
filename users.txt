@@ -1,5 +1,4 @@
 Siddhi Chonkyguy siddhantkale1929@gmail.com 54228 200.00
-sidu Hello siddhant.1251050203@vit.edu 65412 200.00
 Siddhant Siddhant@vit sid@gmail.com 34569 10600.00
 Ayaman 123 ayaman@vu 9228 9600.00
 dummy dummy123 dummy@gmail.com 46626 200.00
@@ -14,4 +13,3 @@ Rahul rahul@abc rahul@outlook.com 29401 8600.00
 Arjun arjun@007 arjun@vit.edu 90214 15500.00
 Zoya zoya@999 zoya@gmail.com 66781 300.00
 Fahim fahim@123 fahim.jamadar@gmail.com 46281 194700.00
-
