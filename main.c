@@ -980,13 +980,13 @@ int emp_daily()
           getch();
           break;
         }
+               printf("\e[1;1H\e[2J");
+              printf("%-15s %-25s %-12s %10s\n", "Username", "Email", "Customer ID", "Balance");
 
-               while (fscanf(fp, "%63s %63s %63s %d %f",
-                username, password, email, &custId, &balance) == 5)
-                {
-                  printf("%s\t%s\t%d\t%.2f\n",
-                    username, email, custId, balance);
-                }
+              while (fscanf(fp, "%63s %63s %63s %d %f", username, password, email, &custId, &balance) == 5)
+            {
+            printf("%-15s %-25s %-12d %10.2f\n", username, email, custId, balance);
+            }
 
         fclose(fp);
         printf("\nPress any key to return to menu...");
