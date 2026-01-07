@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <math.h>
 #include <shellapi.h> 
+ char time_buffer[80];
 
 void show_about_image() {
     ShellExecuteA(NULL, "open","C:/Users/Siddhant Kale/Pictures/fordp.jpg",NULL,NULL,SW_SHOWNORMAL);
@@ -760,6 +761,13 @@ int login()
     {
       if (strcmp(userLogin.username, userLoginCheck.username) == 0 && strcmp(userLogin.password, userLoginCheck.password) == 0)
       {
+       
+        time_t rawtime;
+        struct tm *timeinfo;
+        time(&rawtime);
+        timeinfo = localtime(&rawtime);
+        strftime(time_buffer, sizeof(time_buffer), "[%d/%m/%Y %I:%M:%S %p]", timeinfo);
+
         printf("\nLogin Succesfull! ");
         fetch_user(userLogin.username);
         fclose(fp);
@@ -878,9 +886,14 @@ int signup()
 
   srand(time(NULL));
   userSignIn.custId = rand();
+   time_t rawtime;
+    struct tm *timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    strftime(time_buffer, sizeof(time_buffer), "[%d/%m/%Y %I:%M:%S %p]", timeinfo);
 
   FILE *fp4 = fopen("users.txt", "a");
-  fprintf(fp4, "%s %s %s %d 10000.0\n", userSignIn.username, userSignIn.password, userSignIn.email, userSignIn.custId);
+  fprintf(fp4, "%s %s %s %d 10000.0 %s \n", userSignIn.username, userSignIn.password, userSignIn.email, userSignIn.custId, time_buffer);
 
   printf("\n✅ Your account has been created succesfully.");
   printf("\nYour unique id is: %d", userSignIn.custId);
@@ -899,7 +912,7 @@ int emp_daily()
   char ch;
 
   printf("\e[1;1H\e[2J");
-  printf("Employee Daily with Customers \n");
+  printf("Employee Interaction with Customers \n");
   printf("Press number keys to select between options and then press Enter\n");
   printf("  1. View All Customers\n");
   printf("  2. Search Customer by ID\n");
@@ -1631,10 +1644,10 @@ int about_us(){
     printf("                         MEET OUR TEAM\n");
     printf("----------------------------------------------------------------\n\n");
     
-    printf("1. Display Info\n");
-    printf("2. Display image\n");
-    printf("Enter your choice: ");
-    scanf("%d", &team);
+      printf("1. Board of Directors\n");
+      printf("2. Development Team\n");
+      printf("Enter your choice: ");
+      scanf("%d", &team);
 
     switch (team) {
 
