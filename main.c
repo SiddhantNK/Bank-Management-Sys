@@ -1044,7 +1044,7 @@ int emp_daily()
         }
 
         while (fscanf(fp, "%s %s %s %d %f",
-                      username, password, email, &custId, &balance) != EOF)
+                      username, password, email, &custId, &balance) == 5 )
         {
           if (custId == id)
           {
