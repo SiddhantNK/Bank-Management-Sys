@@ -1112,6 +1112,7 @@ int emp_daily()
         }
 
         fclose(fp);
+        menu = 0;
 
         if (!found)
           printf(RED"\n Customer not found!"RESET);
@@ -1633,7 +1634,7 @@ int about_us(){
   
     printf("1. About Us\n");
     printf("2. Meet Our Team\n");
-    printf("2. Bank ChatBot\n\n");
+    printf("3. Bank ChatBot\n\n");
 
 
     printf(BLUE"Enter your choice: "RESET);
