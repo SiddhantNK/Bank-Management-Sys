@@ -19,17 +19,17 @@
 #define WHITE   "\033[37m"
 
 void show_about_image() {
-    ShellExecuteA(NULL, "open","C:/Users/Siddhant Kale/Pictures/fordp.jpg",NULL,NULL,SW_SHOWNORMAL);
+  ShellExecuteA(NULL, "open", "grp.jpg", NULL, NULL, SW_SHOWNORMAL);
 
-printf("\n-----------------------------------------------\n");
-printf("About Our Team:\n");
-printf("A group of motivated individuals committed to innovation,\n");
-printf("learning, and delivering effective solutions through teamwork.\n");
-printf("-----------------------------------------------\n");
+  printf("\n-----------------------------------------------\n");
+  printf("About Our Team:\n");
+  printf("A group of motivated individuals committed to innovation,\n");
+  printf("learning, and delivering effective solutions through teamwork.\n");
+  printf("-----------------------------------------------\n");
 
-    printf("Press Enter to continue...");
-    getchar();
-    getchar(); 
+  printf("Press Enter to continue...");
+  getchar();
+  getchar(); 
 }
 struct users
 {
@@ -180,7 +180,7 @@ int transfer_money(char username[])
             getch();
             return 1;
           }
-          else if (send_amt > 50000)
+          else if (send_amt > 500000)
           {
             printf(BOLD RED"🚨 FRAUD ALERT: High value transaction detected!\n"RESET);
             getch();
@@ -797,7 +797,11 @@ int login()
         timeinfo = localtime(&rawtime);
         strftime(time_buffer, sizeof(time_buffer), "[%d/%m/%Y %I:%M:%S %p]", timeinfo);
 
+        FILE *time = fopen("time.txt", "a");
+        
         fetch_user(userLogin.username);
+        fprintf(time, "%s %s\n", current_user_details.username, time_buffer);
+        fclose(time);
         fclose(fp);
         getch();
         ver = 1;
@@ -914,14 +918,15 @@ int signup()
 
   srand(time(NULL));
   userSignIn.custId = rand();
-   time_t rawtime;
-    struct tm *timeinfo;
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    strftime(time_buffer, sizeof(time_buffer), "[%d/%m/%Y %I:%M:%S %p]", timeinfo);
 
   FILE *fp4 = fopen("users.txt", "a");
-  fprintf(fp4, "%s %s %s %d 10000.0 %s \n", userSignIn.username, userSignIn.password, userSignIn.email, userSignIn.custId, time_buffer);
+  fprintf(fp4, "%s %s %s %d 10000.0\n", userSignIn.username, userSignIn.password, userSignIn.email, userSignIn.custId);
+
+  time_t rawtime;
+  struct tm *timeinfo;
+  time(&rawtime);
+  timeinfo = localtime(&rawtime);
+  strftime(time_buffer, sizeof(time_buffer), "[%d/%m/%Y %I:%M:%S %p]", timeinfo);
 
   printf(GREEN"\n✅ Your account has been created succesfully."RESET);
   printf("\nYour unique id is: %d", userSignIn.custId);
@@ -930,6 +935,10 @@ int signup()
 
   getch();
   fetch_user(userSignIn.username);
+  FILE *time = fopen("time.txt", "a");
+
+  fprintf(time, "%s %s\n", current_user_details.username, time_buffer);
+  fclose(time);
   account_info(userSignIn.username);
   return 0;
 }
@@ -1735,13 +1744,13 @@ int about_us(){
 
 }
 
-int main()  
+int main()
 {
   int choice = 0, enter = 0;
   char ch;
 
   printf("\e[1;1H\e[2J");
-  printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
+  printf(BOLD CYAN "                        ＮＥＸＵＳ　ＢＡＮＫ\n" RESET);
   printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
   printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n  4.Exit Application");
 
@@ -1753,7 +1762,7 @@ int main()
     case '1':
       choice = 1;
       printf("\e[1;1H\e[2J");
-      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
+      printf(BOLD CYAN "                        ＮＥＸＵＳ　ＢＡＮＫ\n" RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
       printf(GREEN"=>1.Employee Platform"RESET);
       printf(WHITE"\n  2.Customer Platform\n  3.About us\n  4.Exit Application"RESET);
@@ -1761,7 +1770,7 @@ int main()
     case '2':
       choice = 2;
       printf("\e[1;1H\e[2J");
-      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
+      printf(BOLD CYAN "                        ＮＥＸＵＳ　ＢＡＮＫ\n" RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
       printf("  1.Employee Platform \n");
       printf(GREEN"=>2.Customer Platform\n"RESET);
@@ -1770,7 +1779,7 @@ int main()
     case '3':
       choice = 3;
       printf("\e[1;1H\e[2J");
-      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
+      printf(BOLD CYAN "                        ＮＥＸＵＳ　ＢＡＮＫ\n" RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
       printf("  1.Employee Platform \n  2.Customer Platform\n");
       printf(GREEN"=>3.About us\n"RESET);
@@ -1779,7 +1788,7 @@ int main()
       case '4':
       choice = 4;
       printf("\e[1;1H\e[2J");
-      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
+      printf(BOLD CYAN "                        ＮＥＸＵＳ　ＢＡＮＫ\n" RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
       printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n");
       printf(YELLOW"=>4.Exit Application"RESET);
@@ -1812,7 +1821,7 @@ int main()
 
     default:
       printf("\e[1;1H\e[2J");
-      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
+      printf(BOLD CYAN "                        ＮＥＸＵＳ　ＢＡＮＫ\n" RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
       printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n  4.Exit Application");
 
