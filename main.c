@@ -7,6 +7,17 @@
 #include <math.h>
 #include <shellapi.h> 
 
+#define RESET   "\033[0m"
+#define BOLD    "\033[1m"
+
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define WHITE   "\033[37m"
+
 void show_about_image() {
     ShellExecuteA(NULL, "open","C:/Users/Siddhant Kale/Pictures/fordp.jpg",NULL,NULL,SW_SHOWNORMAL);
 
@@ -86,7 +97,7 @@ int transfer_money(char username[])
   int i = 0;
   char ch, pass[64];
   printf("\e[1;1H\e[2J");
-  printf("Enter your password: ");
+  printf(BLUE"Enter your password: "RESET);
   while ((ch = getch()) != '\r')
   {
     if (ch == 8)
@@ -111,12 +122,12 @@ int transfer_money(char username[])
     int choice, enter;
     if (current_user_details.balance == 0.0) {
       printf("\e[1;1H\e[2J");
-      printf("Low account balance, can't proceed!");
+      printf(BOLD RED "Low account balance, can't proceed!" RESET);
       getch();
       return 1;
     }
     printf("\e[1;1H\e[2J");
-    printf("Choose how do you want to send money");
+    printf(MAGENTA"Choose how do you want to send money"RESET);
     printf("\n  1.By username \n  2.By user ID\n  3.Cancel transaction");
     while (enter != 1)
     {
@@ -127,19 +138,23 @@ int transfer_money(char username[])
         choice = 1;
         printf("\e[1;1H\e[2J");
         printf("Choose how do you want to send money");
-        printf("\n=>1.By username \n  2.By user ID\n  3.Cancel transaction");
+        printf(GREEN"\n=>1.By username"RESET);
+        printf(WHITE"\n  2.By user ID\n 3.Cancel transaction"RESET);
         break;
       case '2':
         choice = 2;
         printf("\e[1;1H\e[2J");
         printf("Choose how do you want to send money");
-        printf("\n  1.By username \n=>2.By user ID\n  3.Cancel transaction");
+        printf("\n  1.By username");
+        printf(GREEN "\n=>2.By user ID"RESET);
+        printf("\n  3.Cancel transaction");
         break;
       case '3':
         choice = 3;
         printf("\e[1;1H\e[2J");
         printf("Choose how do you want to send money");
-        printf("\n  1.By username \n  2.By user ID\n=>3.Cancel transaction");
+        printf("\n  1.By username \n  2.By user ID\n");
+        printf(RED"=>3.Cancel transaction"RESET);
         break;
       case '\r':
         if (choice == 1)
@@ -149,15 +164,15 @@ int transfer_money(char username[])
           char to_user[64];
           float send_amt;
           printf("\e[1;1H\e[2J");
-          printf("Enter username: ");
+          printf(BLUE"Enter username: "RESET);
           scanf("%s", to_user);
           if (strcmp(to_user, current_user_details.username) == 0) {
             printf("\e[1;1H\e[2J");
-            printf("You cannot transfer money to yourself!");
+            printf(BOLD RED"You cannot transfer money to yourself!"RESET);
             getch();
             return 1;
           }
-          printf("Enter the amount of money you want to transfer: ");
+          printf(BLUE"Enter the amount of money you want to transfer: "RESET);
           scanf("%f", &send_amt);
           if (send_amt <= 0 || send_amt > current_user_details.balance)
           {
@@ -167,7 +182,7 @@ int transfer_money(char username[])
           }
           else if (send_amt > 50000)
           {
-            printf("🚨 FRAUD ALERT: High value transaction detected!\n");
+            printf(BOLD RED"🚨 FRAUD ALERT: High value transaction detected!\n"RESET);
             getch();
             return 1;
           }
@@ -208,7 +223,7 @@ int transfer_money(char username[])
                 remove("users.txt");
                 rename("transfer.txt", "users.txt");
                 printf("\e[1;1H\e[2J");
-                printf("✅ Money has been transfered successfully.");
+                printf(BOLD GREEN"✅ Money has been transfered successfully."RESET);
                 getch();
                 return 0;
               }
@@ -226,13 +241,13 @@ int transfer_money(char username[])
           int to_user;
           float send_amt;
           printf("\e[1;1H\e[2J");
-          printf("Enter user ID: ");
+          printf(BLUE"Enter user ID: "RESET);
           scanf("%d", &to_user);
-          printf("Enter the amount of money you want to transfer: ");
+          printf(BLUE"Enter the amount of money you want to transfer: "RESET);
           scanf("%f", &send_amt);
           if (send_amt <= 0 || send_amt > current_user_details.balance)
           {
-            printf("Invalid amount!");
+            printf(RED"Invalid amount!"RESET);
             getch();
             return 0;
           }
@@ -244,7 +259,7 @@ int transfer_money(char username[])
             if (to_user == recieverUser.custId)
             {
               printf("\e[1;1H\e[2J");
-              printf("Transfering money... ");
+              printf(YELLOW"Transfering money... "RESET);
               fclose(fp);
               Sleep(3000);
 
@@ -273,12 +288,12 @@ int transfer_money(char username[])
               remove("users.txt");
               rename("transfer.txt", "users.txt");
               printf("\e[1;1H\e[2J");
-              printf("✅ Money has been transfered successfully.");
+              printf(BOLD GREEN"✅ Money has been transfered successfully."RESET);
               getch();
               return 0;
             }
           }
-          printf("No such user found!!");
+          printf(RED"No such user found!!"RESET);
           return 1;
           fclose(fp);
           getch();
@@ -299,7 +314,7 @@ int transfer_money(char username[])
   }
   else
   {
-    printf("Wrong password, transaction cancelled.");
+    printf(RED"Wrong password, transaction cancelled."RESET);
     return 0;
   }
 }
@@ -320,7 +335,7 @@ int change_email()
 {
   char new_mail[64];
   printf("\e[1;1H\e[2J");
-  printf("Enter your new email: ");
+  printf(BLUE"Enter your new email: "RESET);
   scanf("%s", new_mail);
 
   FILE *fp1 = fopen("temp.txt", "w");
@@ -349,14 +364,14 @@ int change_email()
       if (otp == u_otp)
       {
         printf("\e[1;1H\e[2J");
-        printf("Verification successfull!\n");
+        printf(BOLD GREEN"Verification successfull!\n"RESET);
         getch();
         authorized = 1;
       }
       else if (attempts == 0)
       {
         printf("\e[1;1H\e[2J");
-        printf("You have ran out of attempts. Try again later");
+        printf(RED"You have ran out of attempts. Try again later"RESET);
         getch();
         --attempts;
         return 0;
@@ -364,7 +379,7 @@ int change_email()
       else
       {
         printf("\e[1;1H\e[2J");
-        printf("Wrong OTP, please try again.\n");
+        printf(RED"Wrong OTP, please try again.\n"RESET);
         // getch();
         // printf("\e[1;1H\e[2J");
         --attempts;
@@ -374,12 +389,12 @@ int change_email()
   else
   {
     printf("\e[1;1H\e[2J");
-    printf("There is an error sending the mail, please try again later");
+    printf(RED"There is an error sending the mail, please try again later"RESET);
     return 0;
   }
 
   printf("\e[1;1H\e[2J");
-  printf("Changing your email...");
+  printf(YELLOW"Changing your email..."RESET);
   Sleep(3000);
   FILE *old = fopen("users.txt", "r");
   FILE *new = fopen("temp.txt", "w");
@@ -402,7 +417,7 @@ int change_email()
   remove("users.txt");
   rename("temp.txt", "users.txt");
   printf("\e[1;1H\e[2J");
-  printf("✅ Your email has been changed successfully.");
+  printf(BOLD GREEN"✅ Your email has been changed successfully."RESET);
   fetch_user(current_user_details.username);
   getch();
 }
@@ -412,16 +427,16 @@ int apply_loan()
   struct loan newLoan;
 
   printf("\e[1;1H\e[2J");
-  printf("Enter loan type (Home/Car/Education/Personal): ");
+  printf(BLUE"Enter loan type (Home/Car/Education/Personal): "RESET);
   scanf("%s", newLoan.type);
 
-  printf("Enter principal amount: ");
+  printf(BLUE"Enter principal amount: "RESET);
   scanf("%f", &newLoan.principal);
 
-  printf("Enter interest rate (annual %%): ");
+  printf(BLUE"Enter interest rate (annual %%): "RESET);
   scanf("%f", &newLoan.rate);
 
-  printf("Enter tenure (in months): ");
+  printf(BLUE"Enter tenure (in months): "RESET);
   scanf("%d", &newLoan.tenure);
 
   newLoan.emi = calculateEMI(newLoan.principal, newLoan.rate, newLoan.tenure);
@@ -442,8 +457,8 @@ int apply_loan()
           newLoan.status);
   fclose(fp);
 
-  printf("\n✅ Loan applied successfully!");
-  printf("\nMonthly EMI: %.2f", newLoan.emi);
+  printf(BOLD GREEN"\n✅ Loan applied successfully!"RESET);
+  printf(BLUE"\nMonthly EMI: %.2f"RESET, newLoan.emi);
   getch();
   return 0;
 }
@@ -486,7 +501,7 @@ int view_loan_status()
   fclose(fp);
 
   if (!found)
-    printf("\n❌ No active loan found.");
+    printf(RED"\n❌ No active loan found."RESET);
 
   getch();
   return 0;
@@ -502,7 +517,7 @@ int pay_emi()
   FILE *temp = fopen("emi.txt", "w");
 
   if (fp == NULL || temp == NULL) {
-    printf("There is an error fetching the loans, please try again later.");
+    printf(RED"There is an error fetching the loans, please try again later."RESET);
     getch();
     return 0;
   }
@@ -518,7 +533,7 @@ int pay_emi()
 
       if (current_user_details.balance < loanEMI.emi)
       {
-        printf("\n❌ Insufficient balance to pay EMI.");
+        printf(BOLD RED"\n❌ Insufficient balance to pay EMI."RESET);
         getch();
         fclose(fp);
         fclose(temp);
@@ -530,7 +545,7 @@ int pay_emi()
       loanEMI.emiPaid++;
 
       if (loanEMI.remaining <= 0) {
-        printf("✅ Loan closed");
+        printf(GREEN"✅ Loan closed"RESET);
         strcpy(loanEMI.status, "CLOSED");
       }
 
@@ -552,7 +567,7 @@ int pay_emi()
   remove("loans.txt");
   rename("temp.txt", "loans.txt");
 
-  printf("\n✅ EMI paid successfully.");
+  printf(GREEN"\n✅ EMI paid successfully."RESET);
   getch();
   return 0;
 }
@@ -576,28 +591,34 @@ int loan_section() {
       printf("\e[1;1H\e[2J");
       printf("    LOAN SECTION\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("=>1.Apply for Loan \n  2.View loan status\n  3.Pay EMI\n  4.Exit");
+      printf(GREEN"=>1.Apply for Loan"RESET);
+      printf("\n  2.View loan status\n  3.Pay EMI\n  4.Exit");
       break;
     case '2':
       choice = 2;
       printf("\e[1;1H\e[2J");
       printf("    LOAN SECTION\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1.Apply for Loan \n=>2.View loan status\n  3.Pay EMI\n  4.Exit");
+      printf("  1.Apply for Loan ");
+      printf(GREEN"\n=>2.View loan status"RESET);
+      printf("\n  3.Pay EMI\n  4.Exit");
       break;
     case '3':
       choice = 3;
       printf("\e[1;1H\e[2J");
       printf("    LOAN SECTION\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1.Apply for Loan \n  2.View loan status\n=>3.Pay EMI\n  4.Exit");
+      printf("  1.Apply for Loan \n  2.View loan status");
+        printf(GREEN"\n=>3.Pay EMI"RESET);
+        printf("\n  4.Exit");
       break;
     case '4':
       choice = 4;
       printf("\e[1;1H\e[2J");
       printf("    LOAN SECTION\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1.Apply for Loan \n  2.View loan status\n  3.Pay EMI\n=>4.Exit");
+      printf("  1.Apply for Loan \n  2.View loan status\n  3.Pay EMI");
+        printf(RED"\n=>4.Exit"RESET);
       break;
     case '\r':
       if (choice == 1)
@@ -650,35 +671,43 @@ int account_info(char username[])
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("=>1.See account information\n  2.Transfer money\n  3.Loan Section\n  4.Change email\n  5.Back to Login/Sign Up");
+      printf(GREEN"=>1.See account information"RESET);
+      printf("\n  2.Transfer money\n  3.Loan Section\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
     case '2':
       act = 2;
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n=>2.Transfer money\n  3.Loan Section\n  4.Change email\n  5.Back to Login/Sign Up");
+      printf("  1.See account information");
+      printf(GREEN"\n=>2.Transfer money"RESET);
+      printf("\n  3.Loan Section\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
     case '3':
       act = 3;
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n  2.Transfer money\n=>3.Loan Section\n  4.Change email\n  5.Back to Login/Sign Up");
+      printf("  1.See account information\n  2.Transfer money");
+       printf(GREEN"\n=>3.Loan Section"RESET);
+    printf("\n  4.Change email\n  5.Back to Login/Sign Up");
       break;
     case '4':
       act = 4;
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n  2.Transfer money\n  3.Loan Section\n=>4.Change email\n  5.Back to Login/Sign Up");
+      printf("  1.See account information\n  2.Transfer money\n  3.Loan Section"); 
+      printf(GREEN"\n=>4.Change email"RESET);
+      printf("\n  5.Back to Login/Sign Up");
       break;
     case '5':
       act = 5;
       printf("\e[1;1H\e[2J");
       printf("Welcome, %s!\n", username);
       printf("What do you wanna do today?\nPress number keys to select between options and then press Enter\n");
-      printf("  1.See account information\n  2.Transfer money\n  3.Loan Section\n  4.Change email\n=>5.Back to Login/Sign Up");
+      printf("  1.See account information\n  2.Transfer money\n  3.Loan Section\n  4.Change email");
+      printf(YELLOW"\n=>5.Back to Login/Sign Up"RESET);
       break;
     case '\r':
       if (act == 1)
@@ -726,17 +755,17 @@ int login()
 
     if (fp == NULL)
     {
-      printf("\nNo users found!\n");
+      printf(RED"\nNo users found!\n"RESET);
       getch();
       return 0;
     }
 
-    printf("Enter your username: ");
+    printf(BLUE"Enter your username: "RESET);
     scanf("%s", userLogin.username);
 
     int i = 0;
     char ch;
-    printf("Enter your password: ");
+    printf(BLUE"Enter your password: "RESET);
     while ((ch = getch()) != '\r')
     {
       if (ch == 8)
@@ -760,7 +789,7 @@ int login()
     {
       if (strcmp(userLogin.username, userLoginCheck.username) == 0 && strcmp(userLogin.password, userLoginCheck.password) == 0)
       {
-        printf("\nLogin Succesfull! ");
+        printf(GREEN"\nLogin Succesfull! "RESET);
         fetch_user(userLogin.username);
         fclose(fp);
         getch();
@@ -773,19 +802,19 @@ int login()
 
     if (attempts == 0)
     {
-      printf("\nToo many attempts, try again later.");
+      printf(BOLD RED"\nToo many attempts, try again later."RESET);
       getch();
       fclose(fp);
       for(int i = 30; i >0;i-- ) {
         printf("\e[1;1H\e[2J");
-        printf("Try again in %d seconds..", i);
+        printf(YELLOW"Try again in %d seconds.."RESET, i);
         Sleep(1000);
       }
       return 0;
     }
     else
     {
-      printf("\nWrong credentials! Please try again");
+      printf(RED"\nWrong credentials! Please try again"RESET);
       getch();
     }
   }
@@ -796,10 +825,10 @@ int signup()
   struct users userSignIn;
 
   printf("\e[1;1H\e[2J");
-  printf("Enter your username: ");
+  printf(BLUE"Enter your username: "RESET);
   scanf("%s", userSignIn.username);
 
-  printf("Enter your email address to get the OTP: ");
+  printf(BLUE"Enter your email address to get the OTP: "RESET);
   scanf("%s", userSignIn.email);
 
   FILE *fp1 = fopen("temp.txt", "w");
@@ -821,19 +850,19 @@ int signup()
       fclose(fp3);
       remove("temp.txt");
       int u_otp;
-      printf("Enter OTP: ");
+      printf(BLUE"Enter OTP: "RESET);
       scanf("%d", &u_otp);
       if (otp == u_otp)
       {
         printf("\e[1;1H\e[2J");
-        printf("Verification successfull!\n");
+        printf(GREEN"Verification successfull!\n"RESET);
         getch();
         authorized = 1;
       }
       else if (attempts == 0)
       {
         printf("\e[1;1H\e[2J");
-        printf("You have ran out of attempts. Try again later");
+        printf(RED"You have ran out of attempts. Try again later"RESET);
         getch();
         --attempts;
         return 1;
@@ -841,7 +870,7 @@ int signup()
       else
       {
         printf("\e[1;1H\e[2J");
-        printf("Wrong OTP, please try again.\n");
+        printf(RED"Wrong OTP, please try again.\n"RESET);
         // getch();
         // printf("\e[1;1H\e[2J");
         --attempts;
@@ -851,13 +880,13 @@ int signup()
   else
   {
     printf("\e[1;1H\e[2J");
-    printf("There is an error sending the mail, please try again later");
+    printf(RED"There is an error sending the mail, please try again later"RESET);
     return 1;
   }
 
   int i = 0;
   char en;
-  printf("Enter your password: ");
+  printf(BLUE"Enter your password: "RESET);
   while ((en = getch()) != '\r')
   {
     if (en == 8)
@@ -882,7 +911,7 @@ int signup()
   FILE *fp4 = fopen("users.txt", "a");
   fprintf(fp4, "%s %s %s %d 10000.0\n", userSignIn.username, userSignIn.password, userSignIn.email, userSignIn.custId);
 
-  printf("\n✅ Your account has been created succesfully.");
+  printf(GREEN"\n✅ Your account has been created succesfully."RESET);
   printf("\nYour unique id is: %d", userSignIn.custId);
   printf("\nKindly remember this as you require this ID for future transactions.");
   fclose(fp4);
@@ -915,7 +944,7 @@ int emp_daily()
     menu = 1; 
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("=>1. View All Customers\n");
+      printf(GREEN"=>1. View All Customers\n"RESET);
       printf("  2. Search Customer by ID\n");
       printf("  3. Delete Customer\n");
       printf("  4. Exit\n");
@@ -926,7 +955,7 @@ int emp_daily()
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
       printf("  1. View All Customers\n");
-      printf("=>2. Search Customer by ID\n");
+      printf(GREEN"=>2. Search Customer by ID\n"RESET);
       printf("  3. Delete Customer\n");
       printf("  4. Exit\n");
 
@@ -937,7 +966,7 @@ int emp_daily()
       printf("Press number keys to select between options and then press Enter\n");
       printf("  1. View All Customers\n");
       printf("  2. Search Customer by ID\n");
-      printf("=>3. Delete Customer\n");
+      printf(RED"=>3. Delete Customer\n"RESET);
       printf("  4. Exit\n");
      break;
     case '4':
@@ -947,7 +976,7 @@ int emp_daily()
       printf("  1. View All Customers\n");
       printf("  2. Search Customer by ID\n");
       printf("  3. Delete Customer\n");
-      printf("=>4. Exit\n");
+      printf(RED"=>4. Exit\n"RESET);
      break;
 
     case '\r':
@@ -963,7 +992,7 @@ int emp_daily()
         fp = fopen("users.txt", "r");
         if (fp == NULL)
         {
-          printf("No customer data found.\n");
+          printf(YELLOW"No customer data found.\n"RESET);
           getch();
           break;
         }
@@ -991,7 +1020,7 @@ int emp_daily()
         float balance;
 
         printf("\e[1;1H\e[2J");
-        printf("Enter Customer ID: ");
+        printf(BLUE"Enter Customer ID: "RESET);
         scanf("%d", &id);
 
         fp = fopen("users.txt", "r");
@@ -1007,7 +1036,7 @@ int emp_daily()
         {
           if (custId == id)
           {
-            printf("\nCustomer Found\n");
+            printf(GREEN"\nCustomer Found\n"RESET);
             printf("-----------------\n");
             printf("Username : %s\n", username);
             printf("Email    : %s\n", email);
@@ -1022,7 +1051,7 @@ int emp_daily()
         fclose(fp);
 
         if (!found)
-          printf("\n Customer not found!");
+          printf(RED"\n Customer not found!"RESET);
 
         getch();
       }
@@ -1036,7 +1065,7 @@ int emp_daily()
         float balance;
 
         printf("\e[1;1H\e[2J");
-        printf("Enter Customer ID to delete: ");
+        printf(BLUE"Enter Customer ID to delete: "RESET);
         scanf("%d", &id);
 
         fp = fopen("users.txt", "r");
@@ -1070,9 +1099,9 @@ int emp_daily()
         rename("temp.txt", "users.txt");
 
         if (found)
-          printf("\n✅ Customer deleted successfully.");
+          printf(GREEN"\n✅ Customer deleted successfully."RESET);
         else
-          printf("\n❌ Customer ID not found.");
+          printf(RED"\n❌ Customer ID not found."RESET);
           printf("\nPress any key to return to menu...");
         getch();
       }
@@ -1110,17 +1139,17 @@ int emp_login()
 
   if (fp == NULL)
   {
-    printf("No employee found!\n");
+    printf(RED"No employee found!\n"RESET);
     getch();
     return 1;
   }
 
-  printf("Enter Employee ID: ");
+  printf(BLUE"Enter Employee ID: "RESET);
   scanf("%d", &employeeLogin.empId);
 
   int i = 0;
   char ch;
-  printf("Enter your password: ");
+  printf(BLUE"Enter your password: "RESET);
   while ((ch = getch()) != '\r')
   {
     if (ch == 8 && i > 0)
@@ -1151,14 +1180,14 @@ int emp_login()
 
   if (found)
   {
-    printf("\n✅ Login Successful!");
+    printf(GREEN"\n✅ Login Successful!"RESET);
     getch();
     emp_daily();   
     return 0;
   }
   else
   {
-    printf("\n❌ Invalid Employee ID or Password");
+    printf(RED"\n❌ Invalid Employee ID or Password"RESET);
     getch();
     return 1;
   }
@@ -1172,10 +1201,10 @@ int emp_signup()
   // printf("\nEnter Employee ID: ");
   // scanf("%d", &e.empId);
 
-  printf("Enter name: ");
+  printf( BLUE"Enter name: " RESET);
   scanf("%s", employeeSignUp.name);
 
-  printf("Enter your email address to get the OTP: ");
+  printf(BLUE "Enter your email address to get the OTP: "RESET);
   scanf("%s", employeeSignUp.email);
 
   FILE *fp1 = fopen("temp.txt", "w");
@@ -1202,7 +1231,7 @@ int emp_signup()
       if (otp == u_otp)
       {
         printf("\e[1;1H\e[2J");
-        printf("Verification successfull!\n");
+        printf(GREEN"Verification successfull!\n"RESET);
         getch();
         authorized = 1;
         // return 0;
@@ -1210,7 +1239,7 @@ int emp_signup()
       else if (attempts == 0)
       {
         printf("\e[1;1H\e[2J");
-        printf("❌ You have ran out of attempts. Try again later");
+        printf(RED"❌ You have ran out of attempts. Try again later"RESET);
         getch();
         --attempts;
         return 0;
@@ -1218,7 +1247,7 @@ int emp_signup()
       else
       {
         printf("\e[1;1H\e[2J");
-        printf("Wrong OTP, please try again.\n");
+        printf(RED"Wrong OTP, please try again.\n"RESET);
         // getch();
         // printf("\e[1;1H\e[2J");
         --attempts;
@@ -1228,13 +1257,13 @@ int emp_signup()
   else
   {
     printf("\e[1;1H\e[2J");
-    printf("There is an error sending the mail, please try again later");
+    printf(RED"There is an error sending the mail, please try again later"RESET);
     return 0;
   }
 
   int i = 0;
   char en;
-  printf("Enter your password: ");
+  printf(BLUE "Enter your password: "RESET);
   while ((en = getch()) != '\r')
   {
     if (en == 8)
@@ -1277,7 +1306,8 @@ int emp_signup()
       printf("\e[1;1H\e[2J");
       printf("Please choose department\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("=>1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
+      printf(BLUE"=>1. HR Department"RESET);
+      printf("\n  2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
       break;
 
     case '2':
@@ -1285,7 +1315,9 @@ int emp_signup()
       printf("\e[1;1H\e[2J");
       printf("Please choose department\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1. HR Department\n=>2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
+      printf("  1. HR Department\n");
+      printf(BLUE"=>2. IT Department"RESET);
+      printf("\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
       break;
 
     case '3':
@@ -1293,7 +1325,9 @@ int emp_signup()
       printf("\e[1;1H\e[2J");
       printf("Please choose department\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1. HR Department\n  2. IT Department\n=>3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
+      printf("  1. HR Department\n  2. IT Department\n");
+        printf(BLUE"=>3. Credits / Loan Operations\n"RESET);
+        printf("  4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
       break;
 
     case '4':
@@ -1301,7 +1335,9 @@ int emp_signup()
       printf("\e[1;1H\e[2J");
       printf("Please choose department\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations\n=>4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
+      printf("  1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations");
+      printf(BLUE"\n=>4. Treasury & Finance"RESET);
+      printf("\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
       break;
 
     case '5':
@@ -1309,7 +1345,9 @@ int emp_signup()
       printf("\e[1;1H\e[2J");
       printf("Please choose department\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n=>5. Front Office / Retail Banking\n  6. Back Office Operations\n  7. Risk Management Department\n");
+      printf("  1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance");
+      printf(BLUE"\n=>5. Front Office / Retail BankingRESET");
+      printf("\n  6. Back Office Operations\n  7. Risk Management Department\n");
       break;
 
     case '6':
@@ -1317,7 +1355,9 @@ int emp_signup()
       printf("\e[1;1H\e[2J");
       printf("Please choose department\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking\n=>6. Back Office Operations\n  7. Risk Management Department\n");
+      printf("  1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking");
+      printf(BLUE"\n=>6. Back Office Operations");
+      printf(" 7. Risk Management Department\n");
       break;
 
     case '7':
@@ -1325,7 +1365,8 @@ int emp_signup()
       printf("\e[1;1H\e[2J");
       printf("Please choose department\n");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n=>7. Risk Management Department\n");
+      printf("  1. HR Department\n  2. IT Department\n  3. Credits / Loan Operations\n  4. Treasury & Finance\n  5. Front Office / Retail Banking\n  6. Back Office Operations\n");
+      printf(BLUE"=>7. Risk Management Department\n"RESET);
       break;
 
     case '\r':
@@ -1386,7 +1427,7 @@ int emp_signup()
   fprintf(fp4, "%s %s %s %d %s\n", employeeSignUp.name, employeeSignUp.password, employeeSignUp.email, employeeSignUp.empId, employeeSignUp.department);
   fclose(fp4);
 
-  printf("\n✅ Your account has been created succesfully.");
+  printf(GREEN"\n✅ Your account has been created succesfully."RESET);
   printf("\nYour unique id is: %d", employeeSignUp.empId);
   printf("\nKindly remember this as you require this ID for future logins.");
 
@@ -1411,19 +1452,23 @@ int user_menu()
       menu = 1;
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("\n>1.Login\n 2.Create an account\n 3.Exit to main screen");
+      printf(GREEN"\n>1.Login"RESET);
+      printf("\n 2.Create an account\n 3.Exit to main screen");
       break;
     case '2':
       menu = 2;
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("\n 1.Login\n>2.Create an account\n 3.Exit to main screen");
+      printf("\n 1.Login");
+      printf(GREEN"\n>2.Create an account"RESET);
+      printf("\n 3.Exit to main screen");
       break;
     case '3':
       menu = 3;
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("\n 1.Login\n 2.Create an account\n>3.Exit to main screen");
+      printf("\n 1.Login\n 2.Create an account\n");
+      printf(YELLOW">3.Exit to main screen"RESET);
       break;
     case '\r':
       if (menu == 1)
@@ -1466,19 +1511,23 @@ int employee_menu()
       menu = 1;
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("=>1. Add Employee (Admin)\n  2. Employee Login\n  3. Exit");
+      printf(GREEN"=>1. Add Employee (Admin)"RESET);
+      printf("\n  2. Employee Login\n  3. Exit");
       break;
     case '2':
       menu = 2;
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1. Add Employee (Admin)\n=>2. Employee Login\n  3. Exit");
+      printf("  1. Add Employee (Admin)");
+        printf(GREEN"\n=>2. Employee Login"RESET);
+        printf("\n  3. Exit");
       break;
     case '3':
       menu = 3;
       printf("\e[1;1H\e[2J");
       printf("Press number keys to select between options and then press Enter\n");
-      printf("  1. Add Employee (Admin)\n  2. Employee Login\n=>3. Exit");
+      printf("  1. Add Employee (Admin)\n  2. Employee Login\n");
+      printf(RED"=>3. Exit"RESET);
       break;
     case '\r':
       if (menu == 1)
@@ -1516,13 +1565,13 @@ int about_us(){
 
       printf("\e[1;1H\e[2J");
     printf("\n=================================================\n");
-    printf("        LAXMI CHIT FUND - INFORMATION MENU\n");
+    printf(BOLD CYAN"        NEXUS BANK - INFORMATION MENU\n"RESET);
     printf("=================================================\n");
   
     printf("1. About Us\n");
     printf("2. Meet Our Team\n\n");
 
-    printf("Enter your choice: ");
+    printf(BLUE"Enter your choice: "RESET);
     scanf("%d", &choice);
     getchar();  
 
@@ -1535,7 +1584,7 @@ int about_us(){
     printf("                            ABOUT US\n");
     printf("=====================================================================\n\n");
 
-    printf("Welcome to Laxmi Chit Fund...!!!\n\n");
+    printf(MAGENTA"Welcome to NEXUS BANK...!!!\n\n"RESET);
     printf("Experience transparent and seamless banking with security at every step.\n");
 
     printf("We aim to provide superior and proactive banking services while delivering cost-\n");
@@ -1544,7 +1593,7 @@ int about_us(){
 
     printf("1. Vision and Values\n");
     printf("2. Safe Banking\n");
-    printf("Enter your choice: ");
+    printf(BLUE"Enter your choice: "RESET);
     scanf("%d", &aboutUs);
     getch();
 
@@ -1617,7 +1666,7 @@ int about_us(){
     break;
 
     default:
-            printf("\nInvalid choice! Please enter a number between 1 and 2.\n");
+            printf(RED"\nInvalid choice! Please enter a number between 1 and 2.\n"RESET);
               getch();
           }
 
@@ -1628,7 +1677,7 @@ int about_us(){
     case 2:
     printf("\e[1;1H\e[2J");
     printf("-----------------------------------------------------------------\n");
-    printf("                         MEET OUR TEAM\n");
+    printf(MAGENTA"                         MEET OUR TEAM\n"RESET);
     printf("----------------------------------------------------------------\n\n");
     
     printf("1. Display Info\n");
@@ -1640,11 +1689,11 @@ int about_us(){
 
         case 1:
     
-    printf("Janvhi Kardure\n");
-    printf("Janhavi Pawar\n");
-    printf("Himali Deshmukh\n");
-    printf("Mohammed Fahim Jamadar\n");
-    printf("Siddhant Kale\n");
+    printf(MAGENTA"Janvhi Kardure\n"RESET);
+    printf(MAGENTA"Janhavi Pawar\n"RESET);
+    printf(MAGENTA"Himali Deshmukh\n"RESET);
+    printf(MAGENTA"Mohammed Fahim Jamadar\n"RESET);
+    printf(MAGENTA"Siddhant Kale\n"RESET);
     printf("");
         getch();
     break;
@@ -1654,7 +1703,7 @@ int about_us(){
        break;
 
     default:
-            printf("\nInvalid choice! Please enter a number between 1 and 2.\n");
+            printf(RED"\nInvalid choice! Please enter a number between 1 and 2.\n"RESET);
               getch();
           }
     break;
@@ -1680,7 +1729,7 @@ int main()
   char ch;
 
   printf("\e[1;1H\e[2J");
-  printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
+  printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
   printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
   printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n  4.Exit Application");
 
@@ -1692,30 +1741,36 @@ int main()
     case '1':
       choice = 1;
       printf("\e[1;1H\e[2J");
-      printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
+      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-      printf("=>1.Employee Platform \n  2.Customer Platform\n  3.About us\n  4.Exit Application");
+      printf(GREEN"=>1.Employee Platform"RESET);
+      printf(WHITE"\n  2.Customer Platform\n  3.About us\n  4.Exit Application"RESET);
       break;
     case '2':
       choice = 2;
       printf("\e[1;1H\e[2J");
-      printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
+      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-      printf("  1.Employee Platform \n=>2.Customer Platform\n  3.About us\n  4.Exit Application");
+      printf("  1.Employee Platform \n");
+      printf(GREEN"=>2.Customer Platform\n"RESET);
+      printf("  3.About us\n  4.Exit Application");
       break;
     case '3':
       choice = 3;
       printf("\e[1;1H\e[2J");
-      printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
+      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-      printf("  1.Employee Platform \n  2.Customer Platform\n=>3.About us\n  4.Exit Application");
+      printf("  1.Employee Platform \n  2.Customer Platform\n");
+      printf(GREEN"=>3.About us\n"RESET);
+      printf  ("  4.Exit Application");
       break;
       case '4':
       choice = 4;
       printf("\e[1;1H\e[2J");
-      printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
+      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
-      printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n=>4.Exit Application");
+      printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n");
+      printf(RED"=>4.Exit Application"RESET);
       break;
 
     case '\r':
@@ -1745,7 +1800,7 @@ int main()
 
     default:
       printf("\e[1;1H\e[2J");
-      printf("-*-*-*-*- LAXMI CHIT FUND -*-*-*-*-\n");
+      printf(BOLD CYAN"-*-*-*-*- NEXUS BANK -*-*-*-*-\n"RESET);
       printf("What do you wanna do? \nPress number keys to select between options and then press Enter\n");
       printf("  1.Employee Platform \n  2.Customer Platform\n  3.About us\n  4.Exit Application");
 
