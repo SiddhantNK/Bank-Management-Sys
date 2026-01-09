@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <math.h>
 #include <shellapi.h> 
- char time_buffer[80];
+char time_buffer[80];
 
 #define RESET   "\033[0m"
 #define BOLD    "\033[1m"
@@ -19,7 +19,7 @@
 #define WHITE   "\033[37m"
 
 void show_about_image() {
-  ShellExecuteA(NULL, "open", "grp.jpg", NULL, NULL, SW_SHOWNORMAL);
+  ShellExecuteA(NULL, "open", "grp.jpeg", NULL, NULL, SW_SHOWNORMAL);
 
   printf("\n-----------------------------------------------\n");
   printf("About Our Team:\n");
@@ -29,7 +29,7 @@ void show_about_image() {
 
   printf("Press Enter to continue...");
   getchar();
-  getchar(); 
+
 }
 struct users
 {
@@ -73,6 +73,48 @@ int fetch_user(char username[])
       return 0;
     }
   }
+}
+
+int chatbot() {
+    int choice;
+    printf("\e[1;1H\e[2J");
+
+    printf("======== BANK CHATBOT ========\n");
+    printf("1. Loan Information\n");
+    printf("2. Credit Card Information\n");
+    printf("3. Fraud Help\n");
+    printf("4. Exit\n");
+    printf("Choose: ");
+    scanf("%d", &choice);
+
+    switch(choice) {
+        case 1:
+            printf("\e[1;1H\e[2J");
+            printf("Loan depends on your credit score.\n");
+            getch();
+            break;
+        case 2:
+            printf("\e[1;1H\e[2J");
+            printf("Credit card is issued if credit score >= 650.\n");
+            getch();
+            break;
+        case 3:
+            printf("\e[1;1H\e[2J");
+            printf("Suspicious or large transactions are flagged.\n");
+            getch();
+            break;
+        case 4:
+            printf("\e[1;1H\e[2J");
+            printf("Chatbot closed.\n");
+            getch();
+            break;
+        default:
+            printf("\e[1;1H\e[2J");
+            printf("Invalid option.\n");
+            getch();
+    }
+
+    return 0;
 }
 
 struct employee
@@ -1590,11 +1632,14 @@ int about_us(){
     printf("=================================================\n");
   
     printf("1. About Us\n");
-    printf("2. Meet Our Team\n\n");
+    printf("2. Meet Our Team\n");
+    printf("2. Bank ChatBot\n\n");
+
 
     printf(BLUE"Enter your choice: "RESET);
     scanf("%d", &choice);
-    getchar();  
+    // getchar();  
+    getch();
 
 
     switch (choice) {
@@ -1720,7 +1765,8 @@ int about_us(){
     break;
 
     case 2:
-      show_about_image();   
+       show_about_image();
+       getch(); 
        break;
 
     default:
@@ -1728,6 +1774,10 @@ int about_us(){
               getch();
           }
     break;
+
+    case 3:
+          chatbot();
+          break;
 
      
     default:
